@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TalonarioDigital (Seguro)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+
+/* --- ESTILOS CSS COMPLETOS --- */
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #e0eafc, #cfdef3);
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+h1 {
+    color: #2c3e50;
+    font-size: clamp(1.8em, 5vw, 2.5em);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    margin: 0;
+}
+
+p {
+    color: #34495e;
+    font-size: clamp(0.9em, 3vw, 1em);
+    margin: 10px 0;
+}
+
+.controles {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+#contadorVendidos {
+    color: #2c3e50;
+    font-size: 1em;
+    font-weight: 600;
+    background: #ffffff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.filtros {
+    display: flex;
+    gap: 8px;
+}
+
+.filtro {
+    position: relative;
+    padding: 6px 12px;
+    background: #95a5a6;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.8em;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    transition: background 0.2s, box-shadow 0.2s;
+}
+
+.filtro.activo {
+    background: #1e90ff;
+    box-shadow: 0 0 8px rgba(30, 144, 255, 0.5);
+}
+
+#filtroTodo:hover:not(.activo) {
+    background: #3498db;
+}
+
+#filtroDisponible {
+    background: #0288d1;
+}
+
+#filtroDisponible.activo {
+    background: #0277bd;
+    box-shadow: 0 0 8px rgba(2, 136, 209, 0.5);
+}
+
+#filtroDisponible:hover:not(.activo) {
+    background: #039be5;
+}
+
+#filtroApartado {
+    background: #e74c3c;
+}
+
+#filtroApartado.activo {
+    background: #c0392b;
+    box-shadow: 0 0 8px rgba(231, 76, 60, 0.5);
+}
+
+#filtroApartado:hover:not(.activo) {
+    background: #d32f2f;
+}
+
+#filtroPagado {
+    background: #2ecc71;
+}
+
+#filtroPagado.activo {
+    background: #27ae60;
+    box-shadow: 0 0 8px rgba(46, 204, 113, 0.5);
+}
+
+#filtroPagado:hover:not(.activo) {
+    background: #4caf50;
+}
+
+.notificacion-filtro {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #ff4757;
+    color: #fff;
+    font-size: 0.6em;
+    font-weight: 600;
+    padding: 1px 5px;
+    border-radius: 50%;
+    box-shadow: 0 0 4px rgba(255, 71, 87, 0.7);
+}
+
+#limpiarTalonario, #logoutBtn {
+    padding: 8px 16px;
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.9em;
+    font-weight: 600;
+    cursor: pointer;
+    margin: 5px 10px;
+    transition: background 0.2s, transform 0.2s;
+}
+
+#logoutBtn {
+    background: #34495e;
+    margin: 0;
+}
+
+#logoutBtn:hover {
+    background: #2c3e50;
+    transform: scale(1.05);
+}
+
+#limpiarTalonario:hover {
+    background: linear-gradient(135deg, #e67e22, #d35400);
+    transform: scale(1.05);
+}
+
+#talonario, #listaBoletos {
+    max-width: 900px;
+    width: 100%;
+    padding: 0 10px;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 6px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 8px;
+    table-layout: fixed;
+}
+
+td {
+    width: 10%;
+    height: 50px;
+    background: linear-gradient(135deg, #6dd5fa, #2980b9);
+    color: #fff;
+    font-size: clamp(0.9em, 2.5vw, 1.1em);
+    font-weight: 600;
+    text-align: center;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+td:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+td.seleccionado {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: #fff;
+}
+
+td.pagado {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    color: #fff;
+}
+
+td.oculta {
+    display: none !important;
+}
+
+/* --- ESTILOS DE LA LISTA DE BOLETOS --- */
+#listaBoletos h2 {
+    color: #2c3e50;
+    margin-top: 30px;
+    text-align: center;
+    width: 100%;
+}
+
+#lista {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Adaptativo */
+    gap: 15px;
+    padding: 0;
+    list-style: none; /* Quitamos viñetas de lista */
+    width: 100%;
+}
+
+.boleto-card {
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border-left: 5px solid;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.boleto-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.boleto-card.apartado {
+    border-left-color: #e74c3c; /* Rojo para Apartado */
+}
+
+.boleto-card.pagado {
+    border-left-color: #2ecc71; /* Verde para Pagado */
+}
+
+.info-numero {
+    font-size: 1.2em;
+    font-weight: 700;
+    color: #34495e;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.info-nombre {
+    font-size: 1em;
+    color: #7f8c8d;
+    margin-bottom: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.info-estado {
+    padding: 4px 8px;
+    border-radius: 5px;
+    font-size: 0.8em;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.boleto-card.apartado .info-estado {
+    background: #fbe6e4;
+    color: #e74c3c;
+}
+
+.boleto-card.pagado .info-estado {
+    background: #e4fbe7;
+    color: #2ecc71;
+}
+
+/* Resto de estilos (modales, notificaciones, etc.) se mantienen igual */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.cerrar {
+    float: right;
+    font-size: 1.5em;
+    cursor: pointer;
+    color: #333;
+}
+
+.modal-content h2 {
+    margin: 0 0 15px;
+    color: #2c3e50;
+    font-size: 1.4em;
+}
+
+.modal-content p {
+    color: #34495e;
+    font-size: 1em;
+    margin: 10px 0 20px;
+}
+
+.modal-content form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.modal-content label {
+    font-size: 1em;
+    color: #34495e;
+}
+
+.modal-content input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.modal-content .botones {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.modal-content button {
+    padding: 10px;
+    background: #2980b9;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background 0.2s;
+    flex: 1;
+    min-width: 100px;
+}
+
+.modal-content button:hover {
+    background: #3498db;
+}
+
+.modal-content #eliminarBoleto {
+    background: #e74c3c;
+}
+
+.modal-content #eliminarBoleto:hover {
+    background: #c0392b;
+}
+
+.modal-content #marcarPago {
+    background: #27ae60;
+}
+
+.modal-content #marcarPago:hover {
+    background: #2ecc71;
+}
+
+.modal-content #marcarPago:disabled {
+    background: #95a5a6;
+    cursor: not-allowed;
+}
+
+.modal-content #enviarWhatsApp {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    background: #25d366; 
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background 0.2s;
+    flex: 1;
+    min-width: 100px;
+    text-align: center;
+    text-decoration: none; 
+    font-weight: 600; 
+}
+
+.modal-content #enviarWhatsApp:hover {
+    background: #128c7e;
+}
+
+/* Estilos específicos para los modales de confirmación */
+#modalConfirmarLimpieza .modal-content p,
+#modalConfirmarEliminacion .modal-content p {
+    color: #34495e;
+    font-size: 1em;
+    margin: 10px 0 20px;
+}
+
+#modalConfirmarLimpieza .botones,
+#modalConfirmarEliminacion .botones {
+    justify-content: space-between;
+}
+
+#confirmarLimpieza,
+#confirmarEliminacion { /* Nuevo botón */
+    background: #e74c3c;
+}
+
+#confirmarLimpieza:hover,
+#confirmarEliminacion:hover { /* Nuevo botón */
+    background: #c0392b;
+}
+
+#cancelarLimpieza,
+#cancelarEliminacion { /* Nuevo botón */
+    background: #7f8c8d;
+}
+
+#cancelarLimpieza:hover,
+#cancelarEliminacion:hover { /* Nuevo botón */
+    background: #95a5a6;
+}
+
+.notificacion {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #00ff7f;
+    color: #fff;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 255, 127, 0.7);
+    z-index: 2000;
+    display: none;
+    animation: slideIn 0.5s ease forwards, slideOut 0.5s ease 2.5s forwards;
+}
+
+.notificacion p {
+    margin: 0;
+    font-size: 1em;
+    font-weight: 600;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideOut {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(100%); opacity: 0; }
+}
+
+.icono {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #1e90ff, #ff4757);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    box-shadow: 0 0 10px rgba(30, 144, 255, 0.5), 0 0 15px rgba(255, 71, 87, 0.5);
+    animation: borderGlow 3s infinite alternate;
+}
+
+@keyframes borderGlow {
+    0% {
+        box-shadow: 0 0 10px rgba(30, 144, 255, 0.5), 0 0 15px rgba(255, 71, 87, 0.5);
+    }
+    100% {
+        box-shadow: 0 0 15px rgba(30, 144, 255, 0.7), 0 0 20px rgba(255, 71, 87, 0.7);
+    }
+}
+
+.boleto {
+    width: 40.5px;
+    height: 20.75px;
+    background: linear-gradient(135deg, #1e90ff, #ff4757);
+    border-radius: 2.5px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: rotate(-10deg) translateY(1.25px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4), 0 0 5px rgba(30, 144, 255, 0.3);
+}
+
+.numero {
+    color: #ffffff;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 7px;
+    text-shadow: 0 0 2px rgba(255, 255, 255, 0.5);
+}
+
+.check {
+    width: 6px;
+    height: 6px;
+    background: #00ff7f;
+    border-radius: 50%;
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    box-shadow: 0 0 5px rgba(0, 255, 127, 0.7);
+}
+
+.check::before {
+    content: '';
+    position: absolute;
+    width: 1.25px;
+    height: 2.5px;
+    background: #ffffff;
+    transform: rotate(45deg);
+    top: 1.5px;
+    left: 2.25px;
+}
+
+.check::after {
+    content: '';
+    position: absolute;
+    width: 1.25px;
+    height: 1.25px;
+    background: #ffffff;
+    transform: rotate(-45deg);
+    top: 2.5px;
+    left: 1.75px;
+}
+
+@media (max-width: 600px) {
+    table {
+        border-spacing: 4px;
+    }
+    td {
+        height: 40px;
+        font-size: clamp(0.8em, 2.2vw, 0.9em);
+    }
+    .modal-content {
+        width: 95%;
+        padding: 15px;
+    }
+    .modal-content .botones {
+        flex-direction: column;
+    }
+    .icono {
+        width: 38px;
+        height: 38px;
+    }
+    .boleto {
+        width: 28.875px;
+        height: 19.3125px;
+        border-radius: 2px;
+    }
+    .numero {
+        font-size: 5px;
+    }
+    .check {
+        width: 4.5px;
+        height: 4.5px;
+        top: -1.5px;
+        right: -1.5px;
+    }
+    .check::before {
+        width: 1mm;
+        height: 2mm;
+        top: 1.2mm;
+        left: 1.8mm;
+    }
+    .check::after {
+        width: 1mm;
+        height: 1mm;
+        top: 2mm;
+        left: 1.5mm;
+    }
+    .controles {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .filtros {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 6px;
+    }
+    .filtro {
+        padding: 5px 10px;
+        font-size: 0.7em;
+    }
+    .notificacion-filtro {
+        top: -6px;
+        right: -6px;
+        font-size: 0.5em;
+        padding: 1px 4px;
+    }
+    #contadorVendidos {
+        font-size: 0.9em;
+        padding: 4px 8px;
+    }
+    #limpiarTalonario {
+        padding: 8px 16px;
+        font-size: 0.9em;
+    }
+    .notificacion {
+        top: 10px;
+        right: 10px;
+        padding: 10px 15px;
+        font-size: 0.9em;
+    }
+    
+    /* Adaptar la lista al móvil */
+    #lista {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 400px) {
+    table {
+        border-spacing: 3px;
+    }
+    td {
+        height: 30px;
+        font-size: clamp(0.7em, 2vw, 0.8em);
+    }
+}
+    </style>
+    <link rel="icon" id="favicon" type="image/png" href="icono-talonariodigital.png">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <div class="icono">
+                <div class="boleto">
+                    <span class="numero">Rifa</span>
+                    <div class="check"></div>
+                </div>
+            </div>
+            <h1>TalonarioDigital</h1>
+        </div>
+        <p id="subtituloPrincipal">Verificando sesión...</p>
+        
+        <div id="userInfo" style="margin-top: 10px; display: none;">
+            <p id="emailDisplay" style="margin: 0; font-weight: 600;"></p>
+            <button id="logoutBtn">Cerrar Sesión</button>
+        </div>
+    </header>
+
+    <div id="talonarioView" style="display: none; width: 100%; max-width: 900px; display: flex; flex-direction: column; align-items: center;">
+        <div class="controles">
+            <span id="contadorVendidos">Vendidos: 0/100</span>
+            <div class="filtros">
+                <button id="filtroTodo" class="filtro activo">Todo <span class="notificacion-filtro" id="contadorTodo">100</span></button>
+                <button id="filtroDisponible" class="filtro">Disponible <span class="notificacion-filtro" id="contadorDisponible">100</span></button>
+                <button id="filtroApartado" class="filtro">Apartado <span class="notificacion-filtro" id="contadorApartado">0</span></button>
+                <button id="filtroPagado" class="filtro">Pagado <span class="notificacion-filtro" id="contadorPagado">0</span></button>
+            </div>
+        </div>
+        <div id="talonario" style="margin-top: 20px;">
+            </div>
+        <button id="limpiarTalonario" style="display: none;">Clic Para Nueva Rifa</button>
+
+        <div id="listaBoletos">
+            <h2>Lista de Boletos</h2>
+            <div id="lista"></div> 
+        </div>
+    </div>
+
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span id="cerrarModal" class="cerrar">×</span>
+            <h2><span id="modalTitulo">Registrar</span> Boleto <span id="numeroBoleto"></span></h2>
+            <form id="formRegistro">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" required>
+
+                <label>Celular:</label>
+                <div style="display: flex; gap: 5px;">
+                    <select id="codigoPais" style="padding: 8px; border: 1px solid #ccc; border-radius: 5px; font-size: 1em; width: 120px;">
+                        <option value="57" selected>🇨🇴 Colombia (+57)</option>
+                        <option value="52">🇲🇽 México (+52)</option>
+                        <option value="51">🇵🇪 Perú (+51)</option>
+                        <option value="54">🇦🇷 Argentina (+54)</option>
+                        <option value="1">🇺🇸/🇨🇦 EE.UU./Canadá (+1)</option>
+                        <option value="34">🇪🇸 España (+34)</option>
+                        <option value="56">🇨🇱 Chile (+56)</option>
+                        <option value="58">🇻🇪 Venezuela (+58)</option>
+                        <option value="593">🇪🇨 Ecuador (+593)</option>
+                        <option value="591">🇧🇴 Bolivia (+591)</option>
+                        <option value="595">🇵🇾 Paraguay (+595)</option>
+                        <option value="503">🇸🇻 El Salvador (+503)</option>
+                        </select>
+                    <input type="tel" id="celularInput" name="celularInput" required placeholder="Número (ej: 3155445183)" style="flex-grow: 1;">
+                </div>
+                
+                <input type="hidden" id="celular" name="celular"> 
+
+                <div class="botones">
+                    <button type="submit">Guardar</button>
+                    <button type="button" id="eliminarBoleto" style="display: none;">Eliminar</button>
+                    <button type="button" id="marcarPago" style="display: none;">Marcar como Pagado</button>
+                    <a id="enviarWhatsApp" target="_blank" style="display: none;">
+                        Notificar por WhatsApp
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div id="modalConfirmarEliminacion" class="modal">
+        <div class="modal-content">
+            <span id="cerrarModalConfirmarEliminacion" class="cerrar">×</span>
+            <h2>Confirmar Eliminación</h2>
+            <p id="mensajeConfirmacionEliminar">¿Estás seguro de que deseas eliminar el boleto N° **? Esta acción es irreversible.</p>
+            <div class="botones">
+                <button id="confirmarEliminacion">Sí, Eliminar</button>
+                <button id="cancelarEliminacion">No, Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalConfirmarLimpieza" class="modal">
+        <div class="modal-content">
+            <span id="cerrarModalConfirmar" class="cerrar">×</span>
+            <h2>Confirmar Nueva Rifa</h2>
+            <p>¿Estás seguro de que deseas limpiar el talonario para iniciar una nueva rifa? Esto eliminará todos tus datos.</p>
+            <div class="botones">
+                <button id="confirmarLimpieza">Confirmar</button>
+                <button id="cancelarLimpieza">Cancelar</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="notificacion" class="notificacion">
+        <p id="mensajeNotificacion"></p>
+    </div>
+    
+    
+<script type="module">
+    // Importar las funciones necesarias de Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+    import { 
+        getFirestore, 
+        collection, 
+        doc, 
+        getDocs, 
+        setDoc, 
+        updateDoc, 
+        deleteDoc, 
+        writeBatch,
+        onSnapshot 
+    } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
+    import { 
+        getAuth, 
+        signOut, 
+        onAuthStateChanged 
+    } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
+
+
+    // Tu configuración de Firebase (¡Reemplaza con tu propia configuración real!)
+    const firebaseConfig = {
+        apiKey: "AIzaSyDY5KBUwbDwjeCYY7ILXkRB5EJBVoVAmF0", 
+        authDomain: "talonario-rifa.firebaseapp.com",
+        projectId: "talonario-rifa",
+        storageBucket: "talonario-rifa.appspot.com",
+        messagingSenderId: "987446023081",
+        appId: "1:987446023081:web:150e8d7a94975593ac2ab8",
+        measurementId: "G-FWH8F9SVFM"
+    };
+
+    // Inicializar Firebase, Firestore y Auth
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app); 
+    
+    // --- VARIABLES DE ESTADO ---
+    let uidUsuarioActual = null; 
+    let boletosRef; 
+    let unsubscribe = null; 
+
+    let filtroActivo = 'todo';
+    let datosActuales = { seleccionados: [], pagados: [], datosBoletos: {} }; 
+    let numeroBoletoActual = null; 
+    // ----------------------------
+
+    // --- FUNCIONES CRUD DINÁMICAS (DEPENDEN DE uidUsuarioActual) ---
+    
+    function obtenerBoletosRef(uid) {
+        return collection(db, 'users', uid, 'rifas');
+    }
+    
+    async function guardarBoleto(numero, data) {
+        if (!uidUsuarioActual) throw new Error("Usuario no autenticado.");
+        await setDoc(doc(boletosRef, numero), data);
+    }
+    
+    async function actualizarEstadoBoleto(numero, estado) {
+        if (!uidUsuarioActual) throw new Error("Usuario no autenticado.");
+        await updateDoc(doc(boletosRef, numero), { estado: estado });
+    }
+    
+    async function eliminarBoleto(numero) {
+        if (!uidUsuarioActual) throw new Error("Usuario no autenticado.");
+        await deleteDoc(doc(boletosRef, numero)); 
+    }
+    
+    async function limpiarTodaColeccion() {
+        if (!uidUsuarioActual) throw new Error("Usuario no autenticado.");
+        const snapshot = await getDocs(boletosRef);
+        const batch = writeBatch(db); 
+        
+        snapshot.docs.forEach((d) => {
+            batch.delete(d.ref);
+        });
+        
+        await batch.commit();
+    }
+    
+    // --- FUNCIÓN DE TIEMPO REAL DINÁMICA ---
+    function iniciarOyenteTiempoReal() {
+        if (!uidUsuarioActual) return;
+        
+        if (unsubscribe) {
+            unsubscribe();
+            unsubscribe = null;
+        }
+
+        boletosRef = obtenerBoletosRef(uidUsuarioActual);
+        
+        console.log(`Estableciendo oyente de tiempo real para UID: ${uidUsuarioActual}`);
+        
+        unsubscribe = onSnapshot(boletosRef, (snapshot) => {
+            
+            let seleccionados = [];
+            let pagados = [];
+            let datosBoletos = {};
+            
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                const numero = doc.id;
+                datosBoletos[numero] = data;
+
+                if (data.estado === 'apartado') {
+                    seleccionados.push(numero);
+                } else if (data.estado === 'pagado') {
+                    pagados.push(numero);
+                }
+            });
+            
+            datosActuales = { seleccionados, pagados, datosBoletos }; 
+
+            // 🌟 AQUI SE VUELVE A GENERAR LA TABLA CON LOS DATOS OBTENIDOS
+            generarTalonario(datosActuales.seleccionados, datosActuales.pagados, datosActuales.datosBoletos);
+            
+            actualizarControles(datosActuales.seleccionados, datosActuales.pagados);
+            generarListaBoletos(datosActuales.seleccionados, datosActuales.pagados, datosActuales.datosBoletos); 
+            verificarTalonarioCompleto(datosActuales.pagados); 
+            
+            console.log('Vista actualizada por evento de Firestore.');
+
+        }, (error) => {
+            console.error('Error en el oyente de Firestore:', error);
+            // Mostrar un mensaje de error dentro del div si falla
+            document.getElementById('talonario').innerHTML = '<p style="color: red;">Error al cargar el talonario: ' + error.message + '</p>';
+            mostrarNotificacion('Error de conexión en tiempo real con Firebase.');
+        });
+    }
+
+    // --- MANEJO DE AUTENTICACIÓN (GUARDIA DE SEGURIDAD) ---
+
+    function setupAuthListeners() {
+
+        document.getElementById('logoutBtn').onclick = async () => {
+            try {
+                await signOut(auth);
+                mostrarNotificacion("¡Sesión cerrada con éxito!");
+            } catch (error) {
+                console.error("Error al cerrar sesión:", error);
+                mostrarNotificacion("Error al cerrar sesión.");
+            }
+        };
+
+        onAuthStateChanged(auth, (user) => {
+            const talonarioView = document.getElementById('talonarioView');
+            const userInfo = document.getElementById('userInfo');
+            const subtituloPrincipal = document.getElementById('subtituloPrincipal');
+            
+            // Ocultar el contenido por defecto
+            talonarioView.style.display = 'none'; 
+            userInfo.style.display = 'none';
+            subtituloPrincipal.textContent = 'Verificando sesión...';
+
+
+            if (user) {
+                // USUARIO AUTENTICADO
+                uidUsuarioActual = user.uid;
+                talonarioView.style.display = 'flex'; // Mostrar la vista del talonario
+                userInfo.style.display = 'block';
+                document.getElementById('emailDisplay').textContent = user.email;
+                subtituloPrincipal.textContent = 'Haz Clic en un número para apartalo, editarlo o pagarlo';
+                
+                // 1. Iniciar la escucha de datos
+                if (!unsubscribe) {
+                    iniciarOyenteTiempoReal(); 
+                }
+                
+            } else {
+                // NINGÚN USUARIO: REDIRECCIÓN INMEDIATA
+                uidUsuarioActual = null;
+                subtituloPrincipal.textContent = 'Redirigiendo al login...';
+
+                // Detener el oyente de tiempo real si estaba activo
+                if (unsubscribe) {
+                    unsubscribe();
+                    unsubscribe = null;
+                }
+                
+                // REDIRECCIÓN DE SEGURIDAD
+                window.location.href = 'index.html'; 
+            }
+        });
+    }
+
+    // --- LÓGICA DE INICIALIZACIÓN Y CARGA ---
+
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('Paso 0: DOM cargado, inicializando TalonarioDigital...');
+        
+        // Inicialización de filtros
+        document.getElementById('filtroTodo').classList.add('activo');
+        document.getElementById('filtroDisponible').addEventListener('click', () => aplicarFiltro('disponible'));
+        document.getElementById('filtroApartado').addEventListener('click', () => aplicarFiltro('apartado'));
+        document.getElementById('filtroPagado').addEventListener('click', () => aplicarFiltro('pagado'));
+        document.getElementById('filtroTodo').addEventListener('click', () => aplicarFiltro('todo'));
+        
+        inicializarModales(); 
+        
+        // Configurar los listeners de autenticación al final
+        setupAuthListeners();
+    });
+
+    // --- FUNCIONES CORE (SIN CAMBIOS) ---
+    
+    function generarTalonario(seleccionados, pagados, datosBoletos) { 
+        const talonario = document.getElementById('talonario');
+        if (!talonario) return;
+        
+        // 🌟 Limpiamos el contenido del div para que la nueva tabla se dibuje
+        talonario.innerHTML = ''; 
+
+        try {
+            const tabla = document.createElement('table');
+            let numero = 0;
+            for (let i = 0; i < 10; i++) {
+                const fila = document.createElement('tr');
+                for (let j = 0; j < 10; j++) {
+                    const celda = document.createElement('td');
+                    const numStr = numero.toString().padStart(2, '0');
+                    celda.textContent = numStr;
+                    celda.dataset.numero = numStr;
+
+                    const isPagado = pagados.includes(numStr);
+                    const isSeleccionado = seleccionados.includes(numStr);
+
+                    celda.classList.remove('seleccionado', 'pagado', 'oculta');
+
+                    if (isPagado) {
+                        celda.classList.add('pagado');
+                    } else if (isSeleccionado) {
+                        celda.classList.add('seleccionado');
+                    }
+                    
+                    if (filtroActivo === 'disponible' && (isSeleccionado || isPagado)) {
+                        celda.classList.add('oculta');
+                    } else if (filtroActivo === 'apartado' && !isSeleccionado) {
+                        celda.classList.add('oculta');
+                    } else if (filtroActivo === 'pagado' && !isPagado) {
+                        celda.classList.add('oculta');
+                    } 
+
+
+                    celda.addEventListener('click', function () {
+                        mostrarModal(this, isPagado ? 'ver' : (isSeleccionado ? 'editar' : 'registrar'), datosActuales.datosBoletos); 
+                    });
+
+                    fila.appendChild(celda);
+                    numero++;
+                }
+                tabla.appendChild(fila);
+            }
+            // 🌟 AQUI SE AGREGA LA TABLA AL DIV VACÍO
+            talonario.appendChild(tabla);
+        } catch (error) {
+            console.error('Error al crear la tabla:', error);
+            talonario.innerHTML = '<p style="color: red;">Error al crear la tabla: ' + error.message + '</p>';
+        }
+    }
+    
+    function mostrarModalEliminacion(numero) {
+        numeroBoletoActual = numero; 
+        const modal = document.getElementById('modalConfirmarEliminacion');
+        const mensaje = document.getElementById('mensajeConfirmacionEliminar');
+        
+        mensaje.innerHTML = `¿Estás seguro de que deseas eliminar el boleto N° **${numero.padStart(2, '0')}**? Esta acción es irreversible.`;
+        
+        modal.style.display = 'flex';
+        document.getElementById('modal').style.display = 'none'; 
+    }
+
+    async function mostrarModal(celda, modo, datosBoletos) {
+        
+        const modal = document.getElementById('modal');
+        const modalTitulo = document.getElementById('modalTitulo');
+        const numeroBoleto = document.getElementById('numeroBoleto');
+        const form = document.getElementById('formRegistro');
+        const nombreInput = document.getElementById('nombre');
+        
+        const codigoPaisSelect = document.getElementById('codigoPais');
+        const celularInput = document.getElementById('celularInput'); 
+        const celularHidden = document.getElementById('celular');
+
+        const eliminarBoletoBtn = document.getElementById('eliminarBoleto');
+        const marcarPago = document.getElementById('marcarPago');
+        const numero = celda.dataset.numero;
+        const enviarWhatsApp = document.getElementById('enviarWhatsApp'); 
+
+        modalTitulo.textContent = modo === 'editar' ? 'Editar' : (modo === 'ver' ? 'Ver' : 'Registrar');
+        numeroBoleto.textContent = numero.padStart(2, '0');
+        modal.style.display = 'flex';
+        
+        const datos = datosBoletos[numero];
+        if (datos) {
+            nombreInput.value = datos.nombre || '';
+            const celularCompleto = datos.celular || '';
+            
+            const codigoMatch = celularCompleto.match(/^(\d{1,3})(\d+)/); 
+            if (codigoMatch) {
+                const codigo = codigoMatch[1];
+                const numeroSolo = codigoMatch[2];
+                const option = Array.from(codigoPaisSelect.options).find(opt => opt.value === codigo);
+                if (option) {
+                    codigoPaisSelect.value = codigo;
+                    celularInput.value = numeroSolo;
+                } else {
+                    codigoPaisSelect.value = '57'; 
+                    celularInput.value = celularCompleto;
+                }
+            } else {
+                codigoPaisSelect.value = '57';
+                celularInput.value = celularCompleto;
+            }
+        } else {
+            nombreInput.value = '';
+            codigoPaisSelect.value = '57'; 
+            celularInput.value = '';
+        }
+
+        eliminarBoletoBtn.style.display = (modo === 'editar' || modo === 'ver') ? 'block' : 'none';
+        marcarPago.style.display = modo === 'editar' ? 'block' : 'none';
+        marcarPago.disabled = celda.classList.contains('pagado'); 
+        nombreInput.disabled = modo === 'ver';
+        celularInput.disabled = modo === 'ver';
+        codigoPaisSelect.disabled = modo === 'ver';
+        form.querySelector('button[type="submit"]').style.display = modo === 'ver' ? 'none' : 'block';
+
+        if (modo === 'ver' || modo === 'editar') {
+            enviarWhatsApp.style.display = 'flex';
+            
+            const datosCliente = datos || {};
+            const numeroClienteLimpio = datosCliente.celular ? datosCliente.celular.replace(/[^0-9]/g, '') : '';
+            const nombreCliente = datosCliente.nombre || 'el cliente';
+            const estadoActual = celda.classList.contains('pagado') ? 'PAGADO' : 'APARTADO';
+            const mensajeBase = `Hola ${nombreCliente}. Confirmo que el número ${numero.padStart(2, '0')} ha sido ${estadoActual} exitosamente. Gracias por participar.`;
+            const mensajeCodificado = encodeURIComponent(mensajeBase);
+            
+            if (numeroClienteLimpio.length >= 10) { 
+                enviarWhatsApp.href = `https://api.whatsapp.com/send?phone=${numeroClienteLimpio}&text=${mensajeCodificado}`; 
+                enviarWhatsApp.textContent = 'Notificar por WhatsApp';
+                enviarWhatsApp.style.background = '#25d366';
+            } else {
+                enviarWhatsApp.href = '#';
+                enviarWhatsApp.textContent = 'Sin Celular (No Válido)';
+                enviarWhatsApp.style.background = '#95a5a6';
+            }
+        } else {
+            enviarWhatsApp.style.display = 'none';
+        }
+
+
+        // --- EVENTO SUBMIT (Guardar/Editar) ---
+        form.onsubmit = async function (e) {
+            e.preventDefault();
+            
+            const codigo = codigoPaisSelect.value.replace(/[^0-9]/g, '');
+            const numeroSolo = celularInput.value.replace(/[^0-9]/g, '');
+            const celularCompleto = codigo + numeroSolo;
+            celularHidden.value = celularCompleto; 
+            
+            const nuevoBoletoData = {
+                numero: numero,
+                nombre: nombreInput.value,
+                celular: celularCompleto,
+                estado: celda.classList.contains('pagado') ? 'pagado' : 'apartado' 
+            };
+            
+            try {
+                await guardarBoleto(numero, nuevoBoletoData);
+                modal.style.display = 'none';
+                mostrarNotificacion(`Boleto ${numero.padStart(2, '0')} guardado/editado.`);
+            } catch (error) {
+                console.error('Error al guardar en Firebase:', error);
+                mostrarNotificacion('Error al guardar: ' + error.message);
+            }
+        };
+        // -------------------------------------
+
+
+        // --- EVENTO ELIMINAR (Llama al nuevo modal) ---
+        eliminarBoletoBtn.onclick = function () {
+            mostrarModalEliminacion(numero);
+        };
+        // -----------------------------------
+
+        // --- EVENTO MARCAR PAGO ---
+        marcarPago.onclick = async function () {
+            if (marcarPago.disabled) return;
+            try {
+                await actualizarEstadoBoleto(numero, 'pagado');
+                modal.style.display = 'none';
+                mostrarNotificacion(`Boleto ${numero.padStart(2, '0')} marcado como PAGADO.`);
+            } catch (error) {
+                console.error('Error al marcar pago en Firebase:', error);
+                mostrarNotificacion('Error al marcar pago: ' + error.message);
+            }
+        };
+        // --------------------------
+
+        document.getElementById('cerrarModal').onclick = function () {
+            modal.style.display = 'none';
+        };
+
+        modal.onclick = function (e) {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        };
+    }
+
+    function actualizarControles(seleccionados, pagados) {
+        const contador = document.getElementById('contadorVendidos');
+        const contadorTodo = document.getElementById('contadorTodo');
+        const contadorDisponible = document.getElementById('contadorDisponible');
+        const contadorApartado = document.getElementById('contadorApartado');
+        const contadorPagado = document.getElementById('contadorPagado');
+
+        const total = 100;
+        const vendidos = seleccionados.length + pagados.length;
+        const disponibles = total - vendidos;
+
+        contador.textContent = `Vendidos: ${vendidos}/100`;
+        contadorTodo.textContent = total;
+        contadorDisponible.textContent = disponibles;
+        contadorApartado.textContent = seleccionados.length;
+        contadorPagado.textContent = pagados.length;
+    }
+
+    function generarListaBoletos(seleccionados, pagados, datosBoletos) {
+        const listaDiv = document.getElementById('lista');
+        if (!listaDiv) return;
+        listaDiv.innerHTML = ''; 
+
+        const todosBoletos = [
+            ...seleccionados.map(num => ({ numero: num, estado: 'apartado' })),
+            ...pagados.map(num => ({ numero: num, estado: 'pagado' }))
+        ].sort((a, b) => parseInt(a.numero) - parseInt(b.numero));
+
+        todosBoletos.forEach(boleto => {
+            const numeroFormateado = boleto.numero.padStart(2, '0');
+            const datos = datosBoletos[boleto.numero] || { nombre: 'Sin nombre', celular: 'Sin celular' };
+            
+            const card = document.createElement('div');
+            card.classList.add('boleto-card', boleto.estado);
+            
+            card.innerHTML = `
+                <div class="info-numero">
+                    <span>Número **${numeroFormateado}**</span>
+                    <span class="info-estado">${boleto.estado}</span>
+                </div>
+                <div class="info-nombre">${datos.nombre}</div>
+            `;
+            
+            listaDiv.appendChild(card);
+        });
+
+        if (todosBoletos.length === 0) {
+            const p = document.createElement('p');
+            p.textContent = 'No hay boletos apartados ni pagados.';
+            p.style.color = '#7f8c8d';
+            p.style.textAlign = 'center';
+            p.style.gridColumn = '1 / -1'; 
+            listaDiv.appendChild(p);
+        }
+    }
+
+    function aplicarFiltro(tipo) {
+        filtroActivo = tipo;
+        const botonesFiltro = document.querySelectorAll('.filtro');
+        botonesFiltro.forEach(btn => btn.classList.remove('activo'));
+        document.getElementById(`filtro${tipo.charAt(0).toUpperCase() + tipo.slice(1)}`).classList.add('activo');
+        
+        generarTalonario(datosActuales.seleccionados, datosActuales.pagados, datosActuales.datosBoletos);
+    }
+
+    function verificarTalonarioCompleto(pagados) {
+        const limpiarBtn = document.getElementById('limpiarTalonario');
+        if (pagados.length === 100) {
+            limpiarBtn.style.display = 'block';
+        } else {
+            limpiarBtn.style.display = 'none';
+        }
+    }
+
+    function inicializarModales() {
+        // --- Modal de Limpieza de Talonario ---
+        const limpiarBtn = document.getElementById('limpiarTalonario');
+        const modalConfirmar = document.getElementById('modalConfirmarLimpieza');
+        const confirmarLimpieza = document.getElementById('confirmarLimpieza');
+        const cancelarLimpieza = document.getElementById('cancelarLimpieza');
+        const cerrarModalConfirmar = document.getElementById('cerrarModalConfirmar');
+
+        limpiarBtn.onclick = function () {
+            modalConfirmar.style.display = 'flex';
+        };
+
+        confirmarLimpieza.onclick = async function () {
+            try {
+                await limpiarTodaColeccion();
+                
+                filtroActivo = 'todo';
+                document.getElementById('filtroTodo').classList.add('activo');
+                document.getElementById('filtroDisponible').classList.remove('activo');
+                document.getElementById('filtroApartado').classList.remove('activo');
+                document.getElementById('filtroPagado').classList.remove('activo');
+                
+                modalConfirmar.style.display = 'none';
+                mostrarNotificacion('¡Talonario limpiado exitosamente! Listo para la nueva rifa.');
+            } catch (error) {
+                console.error('Error al limpiar Firebase:', error);
+                mostrarNotificacion('Error al limpiar el talonario: ' + error.message);
+            }
+        };
+
+        cancelarLimpieza.onclick = function () { modalConfirmar.style.display = 'none'; };
+        cerrarModalConfirmar.onclick = function () { modalConfirmar.style.display = 'none'; };
+        modalConfirmar.onclick = function (e) {
+            if (e.target === modalConfirmar) { modalConfirmar.style.display = 'none'; }
+        };
+        
+        // --- Nuevo Modal de Confirmación de Eliminación ---
+        const modalEliminacion = document.getElementById('modalConfirmarEliminacion');
+        const confirmarEliminacion = document.getElementById('confirmarEliminacion');
+        const cancelarEliminacion = document.getElementById('cancelarEliminacion');
+        const cerrarModalEliminacion = document.getElementById('cerrarModalConfirmarEliminacion');
+
+        confirmarEliminacion.onclick = async function () {
+            if (!numeroBoletoActual) return;
+            
+            try {
+                await eliminarBoleto(numeroBoletoActual); 
+                
+                modalEliminacion.style.display = 'none';
+                mostrarNotificacion(`Boleto ${numeroBoletoActual.padStart(2, '0')} eliminado.`);
+                numeroBoletoActual = null; 
+                
+            } catch (error) {
+                console.error('Error al eliminar en Firebase:', error);
+                mostrarNotificacion('Error al eliminar: ' + error.message);
+            }
+        };
+
+        cancelarEliminacion.onclick = function () { 
+            modalEliminacion.style.display = 'none'; 
+        };
+        cerrarModalEliminacion.onclick = function () { 
+            modalEliminacion.style.display = 'none'; 
+        };
+        modalEliminacion.onclick = function (e) {
+            if (e.target === modalEliminacion) { modalEliminacion.style.display = 'none'; }
+        };
+    }
+
+    function mostrarNotificacion(mensaje) {
+        const notificacion = document.getElementById('notificacion');
+        const mensajeNotificacion = document.getElementById('mensajeNotificacion');
+        notificacion.style.background = mensaje.includes('Error') ? '#ff4757' : '#00ff7f';
+        notificacion.style.boxShadow = mensaje.includes('Error') ? '0 0 15px rgba(255, 71, 87, 0.7)' : '0 0 15px rgba(0, 255, 127, 0.7)';
+        
+        mensajeNotificacion.textContent = mensaje;
+        // Reiniciar la animación
+        notificacion.style.animation = 'none';
+        notificacion.offsetHeight; /* trigger reflow */
+        notificacion.style.animation = null; 
+
+        notificacion.style.display = 'block';
+        // La animación se encarga de ocultarla
+    }
+
+</script>
+</body>
+</html>
