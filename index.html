@@ -1,315 +1,295 @@
 <!DOCTYPE html>
-<head><title>developer</title>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TalonarioDigital - Acceso</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+/* --- ESTILOS CSS COMPLETOS --- */
 
-<style>
-*{padding: 0;
-margin: 0px;
-
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #e0eafc, #cfdef3);
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
 }
 
-body{width:100%; height: 100%; background: #ffffff;}
-  
- .section01{margin: 2px;  height: 150px; width:80%; }
-.section01 img{ height: 12px; float: right;} 
-  
-.container{ text-align: center; margin: 2px;
-height: 120px; width:100%;}
+header {
+    text-align: center;
+    margin-bottom: 20px;
+    width: 100%;
+}
 
-#section1{ text-align: center; margin: 15px;
-width:100px; height: 100px; float: right; }
-#section1 img{  border:  1px solid black;  border-radius: 10px;  text-align: center;}
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
 
-  
-#section2{margin: 10px;
-width:59%; height: 98px;}
+h1 {
+    color: #2c3e50;
+    font-size: clamp(1.8em, 5vw, 2.5em);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    margin: 0;
+}
 
-#section3 {border: 1px solid black;
-width:59%; height: 40px; display: flex;  }
+p {
+    color: #34495e;
+    font-size: clamp(0.9em, 3vw, 1em);
+    margin: 10px 0;
+}
 
-.nav{width:100%; height: 30px; text-align: center;}
+/* ... (Todos los estilos CSS restantes se mantienen igual) ... */
 
-.nav a{display: block; text-decoration: none;
-    font-size: 16px; /* Tamaño de letra */
-    text-transform: uppercase; /* Letras en mayúscula */
-    background: #6B3618; /* Color de fondo */
-    padding: 10px 15px; /* Relleno */
-    margin: 10px;
-    color: #FFD059; /* Color de texto */
-    border-bottom: solid 2px #FFD059; /* Borde inferior */
-    border-radius: 10px; color: #ffffff;  }
+/* --- VISTA DE LOGIN/TALONARIO --- */
+.vista {
+    width: 100%;
+    max-width: 400px;
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    margin-top: 50px;
+}
 
-  #section03{
-width:100%; height: 49px; display: flex;}
-#section08{ width:10%;}
-  
-#section04{ width:50%; height: 49px; padding: 2px; 49px; float: right; margin: 5px; text-align: center;}
+.vista h2 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
 
-#section05{width:50%; height: 49px; float: right; margin: 10px; text-align: center;}
-#section05 a{display: block; text-decoration: none;
-    font-size: 14px; /* Tamaño de letra */
-    text-transform: uppercase; /* Letras en mayúscula */
-    background: #6B3618; /* Color de fondo */
-    padding: 10px 15px; /* Relleno */
-    margin: 1px;
-    color: #FFD059; /* Color de texto */
-    border-bottom: solid 2px #FFD059; /* Borde inferior */
-    border-radius: 10px; color: #ffffff;  }
+.vista form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
 
-  
-.main{   width:100%;  max-height: 220px;  display: flex; overflow-x: auto;}
-#section6 img{ border: 1px solid black; border-radius: 10px; height: 200px; width: 130px;  display: flex;}
-#section6{ margin: 5px; border-radius: 10px;  display: flex;}
-#section66 img{ border: 1px solid black; border-radius: 10px; height: 200px; width: 300px;  display: flex;}
-#section66{ margin: 5px; border-radius: 10px;  display: flex;}
-#section6 video{ border: 1px solid black; border-radius: 10px; height: 200px; width: 300px;  display: flex;}
+.vista input[type="email"], 
+.vista input[type="password"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
 
-.footer{ width:90%; height: 100%; margin: 5px;  }
-p{padding: 10px; }
-  
-.version{ width:90%; height: 40px; }
-   
- 
+.vista button {
+    padding: 10px;
+    background: #1e90ff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    transition: background 0.2s;
+}
 
-header1{display: flex; width:100%;}
+.vista button:hover {
+    background: #007bff;
+}
 
-.logo1{ padding: 15px; width:10px;}
-.log1 { height 30px; width:30px; }
-.log1 img{  height: 30px; width:30px;}
+#toggleAuth {
+    background: none;
+    color: #34495e;
+    border: none;
+    font-size: 0.9em;
+    margin-top: 10px;
+    cursor: pointer;
+    text-decoration: underline;
+}
+/* --------------------------------- */
 
+/* ... (Incluir el resto de estilos para modales, notificaciones, etc. aunque no se usen aquí, por consistencia) ... */
 
-.nombre1{ padding: 20px; height 30px; width:100%;}
-.nombre1 p{font-size: 12px; }
-  
-  header{ display: flex; height 60px; width:100%;}
+/* Estilos para el icono (debes incluirlos) */
+.icono {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #1e90ff, #ff4757);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    box-shadow: 0 0 10px rgba(30, 144, 255, 0.5), 0 0 15px rgba(255, 71, 87, 0.5);
+    animation: borderGlow 3s infinite alternate;
+}
 
-.logo{ padding: 15px; width:70px;}
-.log {height 60px; width:60px; text-align: center;}
-.log img{border:1px solid black; border-radius: 10px; height: 60px; width:60px;}
+@keyframes borderGlow {
+    0% {
+        box-shadow: 0 0 10px rgba(30, 144, 255, 0.5), 0 0 15px rgba(255, 71, 87, 0.5);
+    }
+    100% {
+        box-shadow: 0 0 15px rgba(30, 144, 255, 0.7), 0 0 20px rgba(255, 71, 87, 0.7);
+    }
+}
 
-.nombre{height 50px; width:100%;}
-.nombre p{font-size: 12px; }
+.boleto {
+    width: 40.5px;
+    height: 20.75px;
+    background: linear-gradient(135deg, #1e90ff, #ff4757);
+    border-radius: 2.5px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: rotate(-10deg) translateY(1.25px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4), 0 0 5px rgba(30, 144, 255, 0.3);
+}
 
-  
-</style>
+.numero {
+    color: #ffffff;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 7px;
+    text-shadow: 0 0 2px rgba(255, 255, 255, 0.5);
+}
+
+.check {
+    /* ... (resto del check) ... */
+}
+
+/* ... (Media queries también se mantienen) ... */
+
+    </style>
+    <link rel="icon" id="favicon" type="image/png" href="icono-talonariodigital.png">
 </head>
 <body>
-  
-  
-<div class="container">
-  
-<section id="section1"><img src="1.jpeg" width="80"  height="80">
-</section>
+    <header>
+        <div class="logo">
+            <div class="icono">
+                <div class="boleto">
+                    <span class="numero">Rifa</span>
+                    <div class="check"></div>
+                </div>
+            </div>
+            <h1>TalonarioDigital</h1>
+        </div>
+        <p id="subtituloPrincipal">Inicia sesión para gestionar tu talonario.</p>
+        </header>
 
-<section id="section2">
-<center><font size="4"><b>Dulibry</b></font><br> 
-<font size="3" color="green"><b>Libros electrónicos</b></font>
-<br> <font size="2">Verificado por <b>Virus Total</b></font><br><br>
-<font size="2"><b>Versión:  1.9.0kun11(89)<br>
-Tamaño:  19.58 MB</b></font></center>
-</section>
-  
-</div>
-  
-<div class="nav"> 
-<a href="  dulibry-1-9-0kun11_Android-life.apk  "  download=" dulibry Android life" ><center>Descargar</center></a>
-</div>
-  
+    <div id="authView" class="vista">
+        <h2 id="authTitle">Iniciar Sesión</h2>
+        <form id="authForm">
+            <input type="email" id="email" placeholder="Correo Electrónico" required>
+            <input type="password" id="password" placeholder="Contraseña (mín. 6 caracteres)" required>
+            <button type="submit" id="authSubmitBtn">Acceder</button>
+        </form>
+        <button id="toggleAuth">¿No tienes cuenta? Regístrate</button>
+    </div>
 
-  
-<section id="section03">
-<div id="section08">
-</div>
-<div id="section04"><div class="rw-ui-container"></div>
-</div>
-<div id="section05"><a href="#comentarios" ><center>Comentarios</center></a> 
-</div>
-</section>
-  
-<div class="main">
-<section id="section6">
-<img src="22.jpg" >
-</section>
-<section id="section6">
-<img src="33.jpg">
-</section>
-<section id="section6">
-<img src="44.jpg"  >
-</section>
-<section id="section6">
-<img src="55.jpg" >
-</section>
- <section id="section6">
-<img src="66.jpg" >
-</section>
-<section id="section6">
-<img src="77.jpg" >
-</section>
-</div>
+    <div id="notificacion" class="notificacion" style="display: none;">
+        <p id="mensajeNotificacion"></p>
+    </div>
 
-<div class="footer">
-<p><pre>
-<h2>  Descripción:</h2></pre><br><p> biblioteca de libros en español Dulibry incluye una gran cantidad de libros gratuitos en español para descargar. Estas son algunas de sus características:<br><br>
-
-- Buscador: Podrás Buscar tú libros con el nombre o con el nombre del autor.<br>
-- Los libros cuentan con carátula que te ayudan a ahorrar tiempo.<br>
-- Vista previa: Podrás observar el libro que vas a descargar antes de guardar la copia.<br>
-- Comentarios: Podrás comentar sobre el libro y consultar los comentarios de otros usuarios.<br>
-- Formato o archivos: Cada libro está disponible en diferentes formatos (PDF, EPUB, MOBI, AZW3).
-</p>
-</div>
-  
-
-
-<div class="footer">
-<p><pre>
-<h4>  Datos del desarrollador</h4></pre>
-</div>
-
-<header1>
-<div class="logo1">
-<div class="log1">
-<img src=" desarrollador.png" >
-</div>
-</div>
-<div class="nombre1">
- Doskun
-</div>
-</header1>
-
-<header1>
-<div class="logo1">
-<div class="log1">
-<img src="email.png" >
-</div>
-</div>
-<div class="nombre1">
-dulibry.apk@gmail.com
-</div>
-</header1>
-  
- <header1>
-<div class="logo1">
-<div class="log1">
-<a href=" https://dulibry.biz.site/   "><img src="web.png" ></a>
-</div>
-</div>
-<div class="nombre1">
-<pre>
-Web
-</pre>
-</div>
-</header1> 
-
-<header1>
-<div class="logo1">
-<div class="log1">
-<a href=" https://play.google.com/store/apps/details?id=com.doskun.dulibry    "><img src="play.jpg" ></a>
-</div>
-</div>
-<div class="nombre1">
-Google Play ID 
-</div>
-</header1>  
-
-
-  
-<div class="version">
-<pre><h3>     Otras Versiones </h3>
-</pre>
-</div> 
-
-<header><div class="logo">
-<div class="log"><a href="dulibry-1-9-0kun11_Android-life.apk" download="Dulibry v1.7.0Kun11_ID_2023GA654developer shop" ><img src="1.jpeg" ></a></div></div>
-<div class="nombre"><pre><p>
-Dulibry: Libros Electrónicos
-versión 1.9.0kuN.11(89)
-tamaño 19.58 MB
-</p></pre>
-</div>
-</header>  
-
-
-<header><div class="logo">
-<div class="log"><a href="Dulibry_v1.7.0Kun11_ID_2023GA654_developer-shop.apk.apk" download="Dulibry v1.7.0Kun11_ID_2023GA654developer shop" ><img src="1.jpeg" ></a></div></div>
-<div class="nombre"><pre><p>
-Dulibry: Libros Electrónicos
-versión 1.7.0kuN.11(85)
-tamaño 15.97 MB
-</p></pre>
-</div>
-</header>  
-
-<header><div class="logo">
-<div class="log"><a href="appDulibry_V1.6.0Kun11_ID-DeveloperShop .apk" download="appDulibry_V1.6.0Kun11_ID-Developer Shop" ><img src="1.jpeg" ></a></div></div>
-<div class="nombre"><pre><p>
-Dulibry: Libros Electrónicos
-versión 1.6.0kuN.11(80)
-tamaño 15.19MB
-</p></pre>
-</div>
-</header>  
-
-<header><div class="logo">
-<div class="log"><a href="Dulibry ‧ Apk_developer-shop.apk" download="Dulibry ‧ Apk_developer shop" ><img src="1.jpeg" ></a></div></div>
-<div class="nombre"><pre><p>
-Dulibry: Libros Electrónicos
-versión 1.5.0
-tamaño 14.126MB
-</p></pre>
-</div>
-</header> 
-
-
-
-  
-<div id="comentarios"></div>
-  
-  
-  
-  
- <script type="text/javascript">(function(d, t, e, m){
     
-    // Async Rating-Widget initialization.
-    window.RW_Async_Init = function(){
-                
-        RW.init({
-            huid: "489636",
-            uid: "5b4004c165e23233b1355674625abdce",
-            source: "website",
-            options: {
-                "advanced": {
-                    "layout": {
-                        "align": {
-                            "hor": "center",
-                            "ver": "top"
-                        }
-                    },
-                    "font": {
-                        "size": "14px"
-                    },
-                    "text": {
-                        "rateAwful": "No gusta "
-                    }
-                },
-                "size": "medium",
-                "lng": "es",
-                "style": "oxygen",
-                "isDummy": false
-            } 
-        });
-        RW.render();
+<script type="module">
+    // Importar solo las funciones necesarias para la autenticación
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+    import { 
+        getAuth, 
+        signInWithEmailAndPassword, 
+        createUserWithEmailAndPassword, 
+        onAuthStateChanged 
+    } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
+
+    // Tu configuración de Firebase
+    const firebaseConfig = {
+        apiKey: "AIzaSyDY5KBUwbDwjeCYY7ILXkRB5EJBVoVAmF0", 
+        authDomain: "talonario-rifa.firebaseapp.com",
+        projectId: "talonario-rifa",
+        storageBucket: "talonario-rifa.appspot.com",
+        messagingSenderId: "987446023081",
+        appId: "1:987446023081:web:150e8d7a94975593ac2ab8",
+        measurementId: "G-FWH8F9SVFM"
     };
-        // Append Rating-Widget JavaScript library.
-    var rw, s = d.getElementsByTagName(e)[0], id = "rw-js",
-        l = d.location, ck = "Y" + t.getFullYear() + 
-        "M" + t.getMonth() + "D" + t.getDate(), p = l.protocol,
-        f = ((l.search.indexOf("DBG=") > -1) ? "" : ".min"),
-        a = ("https:" == p ? "secure." + m + "js/" : "js." + m);
-    if (d.getElementById(id)) return;              
-    rw = d.createElement(e);
-    rw.id = id; rw.async = true; rw.type = "text/javascript";
-    rw.src = p + "//" + a + "external" + f + ".js?ck=" + ck;
-    s.parentNode.insertBefore(rw, s);
-    }(document, new Date(), "script", "rating-widget.com/"));</script> 
+
+    // Inicializar Firebase y Auth
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app); 
+    
+    // Función de notificación simplificada
+    function mostrarNotificacion(mensaje) {
+        const notificacion = document.getElementById('notificacion');
+        const mensajeNotificacion = document.getElementById('mensajeNotificacion');
+        notificacion.style.background = mensaje.includes('Error') ? '#ff4757' : '#00ff7f';
+        notificacion.style.boxShadow = mensaje.includes('Error') ? '0 0 15px rgba(255, 71, 87, 0.7)' : '0 0 15px rgba(0, 255, 127, 0.7)';
+        
+        mensajeNotificacion.textContent = mensaje;
+        notificacion.style.animation = 'none';
+        notificacion.offsetHeight; 
+        notificacion.style.animation = null; 
+        notificacion.style.display = 'block';
+    }
+
+
+    function setupAuthListeners() {
+        const authForm = document.getElementById('authForm');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const toggleAuthBtn = document.getElementById('toggleAuth');
+        const authTitle = document.getElementById('authTitle');
+        const authSubmitBtn = document.getElementById('authSubmitBtn');
+        let isLogin = true;
+
+        toggleAuthBtn.onclick = () => {
+            isLogin = !isLogin;
+            authTitle.textContent = isLogin ? 'Iniciar Sesión' : 'Registrarse';
+            authSubmitBtn.textContent = isLogin ? 'Acceder' : 'Crear Cuenta';
+            toggleAuthBtn.textContent = isLogin ? '¿No tienes cuenta? Regístrate' : '¿Ya tienes cuenta? Inicia Sesión';
+        };
+
+        authForm.onsubmit = async (e) => {
+            e.preventDefault();
+            const email = emailInput.value;
+            const password = passwordInput.value;
+
+            try {
+                if (isLogin) {
+                    await signInWithEmailAndPassword(auth, email, password);
+                    mostrarNotificacion("¡Sesión iniciada con éxito!");
+                } else {
+                    await createUserWithEmailAndPassword(auth, email, password);
+                    mostrarNotificacion("¡Registro exitoso!");
+                }
+            } catch (error) {
+                // Manejo de errores (se mantiene igual)
+                let msg = 'Error desconocido. Verifica tu conexión.';
+                if (error.code === 'auth/email-already-in-use') {
+                    msg = 'El correo ya está en uso. ¡Intenta iniciar sesión!';
+                } else if (error.code === 'auth/invalid-email') {
+                    msg = 'Correo inválido.';
+                } else if (error.code === 'auth/weak-password') {
+                    msg = 'Contraseña débil (mín. 6 caracteres).';
+                } else if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                    msg = 'Credenciales incorrectas.';
+                } else if (error.code === 'auth/operation-not-allowed') {
+                    msg = 'La autenticación con Email/Contraseña no está habilitada en Firebase.';
+                }
+                mostrarNotificacion(`⚠️ Error: ${msg}`);
+            }
+        };
+
+        // Escucha el estado de autenticación de Firebase
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // *** CAMBIO CLAVE: REDIRECCIÓN AL ARCHIVO PRINCIPAL ***
+                window.location.href = 'talonario.html'; 
+            }
+            // Si no hay usuario, se queda en esta página.
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        setupAuthListeners();
+    });
+
+</script>
 </body>
 </html>
