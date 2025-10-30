@@ -680,7 +680,7 @@ td.oculta {
         <p id="subtituloPrincipal">Verificando sesión...</p>
         
         <div id="userInfo" style="margin-top: 10px; display: none;">
-            <p id="emailDisplay" style="margin: 0; font-weight: 600;"></p>
+            <p id="emailDisplay" style="margin: 0; font-weight: 600; display: none;"></p>
             <button id="logoutBtn">Cerrar Sesión</button>
         </div>
     </header>
@@ -889,7 +889,6 @@ td.oculta {
             
             datosActuales = { seleccionados, pagados, datosBoletos }; 
 
-            // 🌟 AQUI SE VUELVE A GENERAR LA TABLA CON LOS DATOS OBTENIDOS
             generarTalonario(datosActuales.seleccionados, datosActuales.pagados, datosActuales.datosBoletos);
             
             actualizarControles(datosActuales.seleccionados, datosActuales.pagados);
@@ -900,7 +899,6 @@ td.oculta {
 
         }, (error) => {
             console.error('Error en el oyente de Firestore:', error);
-            // Mostrar un mensaje de error dentro del div si falla
             document.getElementById('talonario').innerHTML = '<p style="color: red;">Error al cargar el talonario: ' + error.message + '</p>';
             mostrarNotificacion('Error de conexión en tiempo real con Firebase.');
         });
@@ -936,7 +934,10 @@ td.oculta {
                 uidUsuarioActual = user.uid;
                 talonarioView.style.display = 'flex'; // Mostrar la vista del talonario
                 userInfo.style.display = 'block';
-                document.getElementById('emailDisplay').textContent = user.email;
+                
+                // 🔑 CAMBIO: Ya no asignamos el correo al elemento que tiene 'display: none;'
+                // document.getElementById('emailDisplay').textContent = user.email; 
+                
                 subtituloPrincipal.textContent = 'Haz Clic en un número para apartalo, editarlo o pagarlo';
                 
                 // 1. Iniciar la escucha de datos
@@ -985,7 +986,7 @@ td.oculta {
         const talonario = document.getElementById('talonario');
         if (!talonario) return;
         
-        // 🌟 Limpiamos el contenido del div para que la nueva tabla se dibuje
+        // Limpiamos el contenido del div para que la nueva tabla se dibuje
         talonario.innerHTML = ''; 
 
         try {
@@ -1028,7 +1029,6 @@ td.oculta {
                 }
                 tabla.appendChild(fila);
             }
-            // 🌟 AQUI SE AGREGA LA TABLA AL DIV VACÍO
             talonario.appendChild(tabla);
         } catch (error) {
             console.error('Error al crear la tabla:', error);
