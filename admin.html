@@ -239,7 +239,7 @@
             if (user) {
                 // AUTENTICADO
                 currentUser = user;
-                // 🛑 MODIFICACIÓN 1: Ocultar el email en el estado de autenticación
+                // 🛑 MODIFICACIÓN 1: Ocultar el email en el estado de autenticación (manteniendo 'Administrador')
                 authStatus.innerHTML = `Conectado como: <strong>Administrador</strong>`;
                 authStatus.style.color = '#2ecc71';
                 sendButton.disabled = false;
@@ -281,6 +281,8 @@
             await addDoc(messagesRef, {
                 uid: currentUser.uid,
                 email: currentUser.email,
+                // ⬅️ CAMBIO 1: Guardar el displayName del usuario
+                displayName: currentUser.displayName || 'Admin', 
                 text: text,
                 timestamp: serverTimestamp() // Usa la marca de tiempo del servidor
             });
@@ -310,8 +312,15 @@
                 bubble.classList.add('message-bubble');
                 bubble.classList.add(isMyMessage ? 'my-message' : 'other-message');
 
-                // 🛑 MODIFICACIÓN 2: Ocultar el email en la burbuja del mensaje
-                const senderName = isMyMessage ? 'Tú (Admin)' : 'Cliente'; // Reemplazo por una etiqueta genérica
+                // ⬅️ CAMBIO 2: Usar displayName para identificar al remitente
+                let senderName;
+                if (isMyMessage) {
+                    // Si es mi mensaje, uso mi displayName guardado o mi apodo por defecto
+                    senderName = currentUser.displayName || 'Tú (Admin)'; 
+                } else {
+                    // Si es el mensaje de otro, uso el displayName guardado en el mensaje o 'Cliente'
+                    senderName = data.displayName || 'Cliente'; 
+                }
                 
                 // Formatear la marca de tiempo si existe
                 let time = '';
