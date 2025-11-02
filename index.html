@@ -91,7 +91,8 @@ h1 {
 }
 
 .vista input[type="email"], 
-.vista input[type="password"] {
+.vista input[type="password"],
+.vista input[type="text"] { /* ⬅️ ¡Ajuste de estilo aquí! */
     width: 100%;
     padding: 12px 12px 12px 40px; /* Aumentado el padding para el icono */
     border: 1px solid #ddd;
@@ -201,13 +202,18 @@ h1 {
     <div id="authView" class="vista">
         <h2 id="authTitle">Iniciar Sesión</h2>
         <form id="authForm">
+            <div class="input-group" id="usernameInputGroup" style="display: none;">
+                <i class="fas fa-user"></i>
+                <input type="text" id="username" placeholder="Nombre de Usuario (Apodo)" autocomplete="username">
+            </div>
+            
             <div class="input-group">
                 <i class="fas fa-envelope"></i>
-                <input type="email" id="email" placeholder="Correo Electrónico" required>
+                <input type="email" id="email" placeholder="Correo Electrónico" required autocomplete="email">
             </div>
             <div class="input-group">
                 <i class="fas fa-lock"></i>
-                <input type="password" id="password" placeholder="Contraseña (mín. 6 caracteres)" required>
+                <input type="password" id="password" placeholder="Contraseña (mín. 6 caracteres)" required autocomplete="current-password">
             </div>
             <button type="submit" id="authSubmitBtn">Acceder</button>
         </form>
@@ -234,15 +240,17 @@ h1 {
 
     
 <script type="module">
-    // Importar funciones de Firebase Auth
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
     import { 
         getAuth, 
         signInWithEmailAndPassword, 
         createUserWithEmailAndPassword, 
-        sendPasswordResetEmail, // <--- Nueva función para recuperación
+        sendPasswordResetEmail,
+        updateProfile, // ⬅️ ¡Nueva función para guardar el nombre de usuario!
         onAuthStateChanged 
     } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
+    // Nota: Para usar este nombre de usuario en el chat, tu chat.html deberá 
+    // usar user.displayName en lugar de user.email
 
     // Tu configuración de Firebase (¡Asegúrate de que esta sea la real!)
     const firebaseConfig = {
@@ -270,8 +278,10 @@ h1 {
         mensajeNotificacion.textContent = mensaje;
         notificacion.style.animation = 'none';
         notificacion.offsetHeight; 
-        notificacion.style.animation = null; 
+        // Usar keyframes en CSS para animaciones o dejarlo simple
+        notificacion.style.animation = 'slideIn 0.5s ease forwards, slideOut 0.5s ease 2.5s forwards';
         notificacion.style.display = 'block';
+        setTimeout(() => { notificacion.style.display = 'none'; }, 3000);
     }
 
 
@@ -281,6 +291,8 @@ h1 {
         const authForm = document.getElementById('authForm');
         const emailInput = document.getElementById('email');
         const passwordInput = document.getElementById('password');
+        const usernameInput = document.getElementById('username'); // ⬅️ Nuevo Input
+        const usernameInputGroup = document.getElementById('usernameInputGroup'); // ⬅️ Nuevo Grupo
         const toggleAuthBtn = document.getElementById('toggleAuth');
         const authTitle = document.getElementById('authTitle');
         const authSubmitBtn = document.getElementById('authSubmitBtn');
@@ -307,7 +319,6 @@ h1 {
             authView.style.display = 'none';
             recuperacionView.style.display = 'block';
             subtituloPrincipal.textContent = 'Restablecimiento de Contraseña';
-            // Copiar el email si ya lo habían escrito en el login
             recuperacionEmailInput.value = emailInput.value;
         }
 
@@ -321,19 +332,33 @@ h1 {
             authTitle.textContent = isLogin ? 'Iniciar Sesión' : 'Registrarse';
             authSubmitBtn.textContent = isLogin ? 'Acceder' : 'Crear Cuenta';
             toggleAuthBtn.textContent = isLogin ? '¿No tienes cuenta? Regístrate' : '¿Ya tienes cuenta? Inicia Sesión';
+            
+            // ⬅️ Mostrar/Ocultar y Requerir campo de usuario
+            usernameInputGroup.style.display = isLogin ? 'none' : 'flex';
+            usernameInput.required = !isLogin; 
+            usernameInput.value = ''; // Limpiar campo al cambiar de vista
         };
 
         authForm.onsubmit = async (e) => {
             e.preventDefault();
             const email = emailInput.value;
             const password = passwordInput.value;
+            const username = usernameInput.value.trim(); // ⬅️ Obtener nombre de usuario
 
             try {
                 if (isLogin) {
                     await signInWithEmailAndPassword(auth, email, password);
                     mostrarNotificacion("¡Sesión iniciada con éxito!");
                 } else {
-                    await createUserWithEmailAndPassword(auth, email, password);
+                    // 1. Crear usuario
+                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                    const user = userCredential.user;
+                    
+                    // 2. ⬅️ Actualizar el perfil con el nombre de usuario
+                    await updateProfile(user, {
+                        displayName: username
+                    });
+                    
                     mostrarNotificacion("¡Registro exitoso! Iniciando sesión...");
                 }
             } catch (error) {
