@@ -46,7 +46,10 @@ p {
 }
 
 /* --- VISTA DE LOGIN/TALONARIO --- */
+
+/* CAMBIO CLAVE: Ocultar la vista de autenticación al cargar para evitar el parpadeo */
 .vista {
+    display: none; /* Empezamos oculto */
     width: 100%;
     max-width: 400px;
     background: #fff;
@@ -211,12 +214,12 @@ p {
     left: 1.75px;
 }
 
+
 @media (max-width: 600px) {
     .vista {
         padding: 20px;
     }
 }
-
     </style>
     <link rel="icon" id="favicon" type="image/png" href="icono-talonariodigital.png">
 </head>
@@ -231,7 +234,7 @@ p {
             </div>
             <h1>TalonarioDigital</h1>
         </div>
-        <p id="subtituloPrincipal">Inicia sesión para gestionar tu talonario.</p>
+        <p id="subtituloPrincipal">Verificando sesión...</p>
         </header>
 
     <div id="authView" class="vista">
@@ -282,11 +285,9 @@ p {
         notificacion.style.boxShadow = mensaje.includes('Error') ? '0 0 15px rgba(255, 71, 87, 0.7)' : '0 0 15px rgba(0, 255, 127, 0.7)';
         
         mensajeNotificacion.textContent = mensaje;
-        // Reiniciar la animación (necesario para que se muestre correctamente)
         notificacion.style.animation = 'none';
         notificacion.offsetHeight; 
         notificacion.style.animation = null; 
-
         notificacion.style.display = 'block';
     }
 
@@ -298,6 +299,8 @@ p {
         const toggleAuthBtn = document.getElementById('toggleAuth');
         const authTitle = document.getElementById('authTitle');
         const authSubmitBtn = document.getElementById('authSubmitBtn');
+        const authView = document.getElementById('authView'); // Referencia al contenedor
+        const subtituloPrincipal = document.getElementById('subtituloPrincipal');
         let isLogin = true;
 
         toggleAuthBtn.onclick = () => {
@@ -316,11 +319,9 @@ p {
                 if (isLogin) {
                     await signInWithEmailAndPassword(auth, email, password);
                     mostrarNotificacion("¡Sesión iniciada con éxito!");
-                    // La redirección ocurrirá en onAuthStateChanged
                 } else {
                     await createUserWithEmailAndPassword(auth, email, password);
                     mostrarNotificacion("¡Registro exitoso! Iniciando sesión...");
-                    // La redirección ocurrirá en onAuthStateChanged
                 }
             } catch (error) {
                 // Manejo de errores 
@@ -343,9 +344,13 @@ p {
         // Escucha el estado de autenticación de Firebase
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // *** REDIRECCIÓN CLAVE: Envía al usuario a la página del talonario ***
-                console.log("Usuario autenticado. Redirigiendo a talonario.html");
+                // *** CAMBIO CLAVE: REDIRECCIÓN AL ARCHIVO PRINCIPAL ***
+                // Si hay usuario, redirigimos inmediatamente (el authView sigue oculto)
                 window.location.href = 'talonario.html'; 
+            } else {
+                // Si NO hay usuario, mostramos el formulario
+                authView.style.display = 'flex'; 
+                subtituloPrincipal.textContent = 'Inicia sesión para gestionar tu talonario.';
             }
             // Si no hay usuario, se queda en esta página.
         });
