@@ -935,9 +935,6 @@ td.oculta {
                 talonarioView.style.display = 'flex'; // Mostrar la vista del talonario
                 userInfo.style.display = 'block';
                 
-                // 🔑 CAMBIO: Ya no asignamos el correo al elemento que tiene 'display: none;'
-                // document.getElementById('emailDisplay').textContent = user.email; 
-                
                 subtituloPrincipal.textContent = 'Haz Clic en un número para apartalo, editarlo o pagarlo';
                 
                 // 1. Iniciar la escucha de datos
@@ -980,7 +977,7 @@ td.oculta {
         setupAuthListeners();
     });
 
-    // --- FUNCIONES CORE (SIN CAMBIOS) ---
+    // --- FUNCIONES CORE (ACTUALIZADAS) ---
     
     function generarTalonario(seleccionados, pagados, datosBoletos) { 
         const talonario = document.getElementById('talonario');
@@ -997,11 +994,20 @@ td.oculta {
                 for (let j = 0; j < 10; j++) {
                     const celda = document.createElement('td');
                     const numStr = numero.toString().padStart(2, '0');
-                    celda.textContent = numStr;
                     celda.dataset.numero = numStr;
 
                     const isPagado = pagados.includes(numStr);
                     const isSeleccionado = seleccionados.includes(numStr);
+
+                    // --- CÓDIGO ACTUALIZADO: Solo muestra 💵 si está pagado ---
+                    if (isPagado) {
+                        // Si está pagado, solo mostramos el ícono 💵
+                        celda.innerHTML = `<span style="font-size: 1.5em; line-height: 1;">💵</span>`; 
+                    } else {
+                        // Si no está pagado (disponible o apartado), mostramos el número
+                        celda.textContent = numStr;
+                    }
+                    // --------------------------------------------------------
 
                     celda.classList.remove('seleccionado', 'pagado', 'oculta');
 
@@ -1221,9 +1227,12 @@ td.oculta {
             const card = document.createElement('div');
             card.classList.add('boleto-card', boleto.estado);
             
+            // Ícono en la lista de boletos (se mantiene el número + ícono)
+            const iconoPagado = boleto.estado === 'pagado' ? '<span style="font-size: 1.2em; margin-left: 5px;">💵</span>' : '';
+            
             card.innerHTML = `
                 <div class="info-numero">
-                    <span>Número **${numeroFormateado}**</span>
+                    <span>Número **${numeroFormateado}**${iconoPagado}</span>
                     <span class="info-estado">${boleto.estado}</span>
                 </div>
                 <div class="info-nombre">${datos.nombre}</div>
