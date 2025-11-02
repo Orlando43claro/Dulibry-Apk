@@ -126,6 +126,17 @@ p#subtituloPrincipal {
     line-height: 1; /* Asegura que el texto se centre bien */
 }
 
+/* Estilo para resaltar el botón cuando hay notificaciones */
+.notificacion-activa {
+    animation: pulse 1s infinite;
+}
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
+}
+
+
 /* Media Query para móvil */
 @media (max-width: 650px) {
     header {
@@ -914,7 +925,11 @@ td.oculta {
         updateDoc, 
         deleteDoc, 
         writeBatch,
-        onSnapshot 
+        onSnapshot,
+        // *** IMPORTACIONES AÑADIDAS/CORREGIDAS ***
+        query, 
+        where 
+        // ***************************************
     } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
     import { 
         getAuth, 
@@ -946,7 +961,7 @@ td.oculta {
     let uidUsuarioActual = null; 
     let boletosRef; 
     let unsubscribe = null; 
-    let unsubscribeChatNotifications = null; // NUEVO: Para la escucha de notificaciones de chat
+    let unsubscribeChatNotifications = null; 
 
     let filtroActivo = 'todo';
     let datosActuales = { seleccionados: [], pagados: [], datosBoletos: {} }; 
@@ -986,32 +1001,34 @@ td.oculta {
         await batch.commit();
     }
     
-    // --- NUEVA FUNCIÓN: INICIAR OYENTE DE NOTIFICACIONES DEL CHAT ---
+    // 🚀 --- FUNCIÓN CORREGIDA: INICIAR OYENTE DE NOTIFICACIONES DEL CHAT ---
     function iniciarOyenteNotificacionesChat() {
         if (!uidUsuarioActual) return;
         
-        // Si ya hay un oyente activo de notificaciones, lo detenemos primero
         if (unsubscribeChatNotifications) {
             unsubscribeChatNotifications();
             unsubscribeChatNotifications = null;
         }
 
-        // Referencia a la colección 'chats'
-        const chatRef = collection(db, "chats"); 
         const badge = document.getElementById('chatNotificationBadge');
         
-        // La implementación simple cuenta el total de mensajes en la sala.
-        // Se requiere 'query' y 'where' si se quiere hacer un conteo de 'No Leídos'
-        const q = collection(db, "chats"); 
+        // **NUEVA LÓGICA:** Solo consulta mensajes donde 'leidoAdmin' es falso.
+        const chatRef = collection(db, "chats"); 
+        // Ojo: Asegúrate que tus documentos de chat tengan el campo 'leidoAdmin: false' al crearse.
+        const q = query(chatRef, where("leidoAdmin", "==", false));
+
+        console.log(`Estableciendo oyente de notificaciones de chat para mensajes no leídos.`);
 
         unsubscribeChatNotifications = onSnapshot(q, (snapshot) => {
-            const totalMensajes = snapshot.size;
+            const mensajesNoLeidos = snapshot.size;
             
-            if (totalMensajes > 0) { 
-                badge.textContent = totalMensajes; 
+            if (mensajesNoLeidos > 0) { 
+                badge.textContent = mensajesNoLeidos > 99 ? '99+' : mensajesNoLeidos; // Limita a 99+
                 badge.style.display = 'block';
+                document.getElementById('abrirChatBtn').classList.add('notificacion-activa');
             } else {
                 badge.style.display = 'none';
+                document.getElementById('abrirChatBtn').classList.remove('notificacion-activa');
             }
         }, (error) => {
             console.error("Error al escuchar notificaciones de chat:", error);
@@ -1020,7 +1037,7 @@ td.oculta {
     }
 
     
-    // --- FUNCIÓN DE TIEMPO REAL DINÁMICA DE RIFAS ---
+    // --- FUNCIÓN DE TIEMPO REAL DINÁMICA DE RIFAS (Se mantiene igual) ---
     function iniciarOyenteTiempoReal() {
         if (!uidUsuarioActual) return;
         
