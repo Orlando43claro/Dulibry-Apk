@@ -3,337 +3,205 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TalonarioDigital - Chat</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>Chat en Tiempo Real - TalonarioDigital</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
     <style>
-/* --- ESTILOS CSS COMPLETOS --- */
 
-body {
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #e0eafc, #cfdef3);
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-}
+        /* --- ESTILOS ESPECÍFICOS DEL CHAT --- */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #e0eafc, #cfdef3);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
 
-header {
-    background-color: #ffffff;
-    color: #2c3e50;
-    padding: 10px 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 900px;
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-sizing: border-box; 
-    border-radius: 0 0 8px 8px; 
-}
+        #chatContainer {
+            width: 95%;
+            max-width: 700px;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            height: 80vh; /* Altura fija para el chat */
+            overflow: hidden;
+        }
 
-h1 {
-    font-size: clamp(1.5em, 5vw, 2em);
-    margin: 0;
-    color: #34495e;
-}
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+            padding: 15px;
+            margin: 0;
+            border-bottom: 1px solid #eee;
+        }
 
-#userInfo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
+        /* Área de visualización de mensajes */
+        #messages {
+            flex-grow: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
 
-/* 🛑 Nuevo Estilo: Ocultar el Correo Electrónico del Administrador */
-#emailDisplay {
-    display: none !important; 
-}
+        /* Estilo de mensaje individual */
+        .message-bubble {
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 18px;
+            line-height: 1.4;
+            word-wrap: break-word;
+            position: relative;
+        }
 
-/* Estilos de botones */
-#userInfo button, #backToTalonarioBtn {
-    border: none;
-    padding: 8px 16px;
-    border-radius: 5px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    color: white; 
-    font-size: 0.9em;
-}
+        .message-bubble strong {
+            display: block;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+        
+        .message-bubble small {
+            display: block;
+            margin-top: 5px;
+            font-size: 0.7em;
+            color: rgba(0, 0, 0, 0.5);
+            text-align: right;
+        }
 
-#logoutBtn {
-    background: #e74c3c; /* Rojo */
-}
-#backToTalonarioBtn {
-    background: #3498db; /* Azul */
-    text-decoration: none;
-}
+        /* Mensajes del usuario actual (a la derecha) */
+        .my-message {
+            align-self: flex-end;
+            background: linear-gradient(135deg, #3498db, #1e90ff);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+        
+        /* Mensajes de otros usuarios (a la izquierda) */
+        .other-message {
+            align-self: flex-start;
+            background: #ecf0f1;
+            color: #2c3e50;
+            border: 1px solid #ddd;
+            border-bottom-left-radius: 4px;
+        }
 
-#userInfo button:hover, #backToTalonarioBtn:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
-}
+        /* Formulario de entrada */
+        #messageForm {
+            display: flex;
+            padding: 15px;
+            border-top: 1px solid #eee;
+        }
 
-.chat-container {
-    background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 800px;
-    height: 75vh;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    margin-bottom: 20px;
-}
+        #messageInput {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            margin-right: 10px;
+            resize: none;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1em;
+        }
 
-/* Lista de Chats (Administrador) */
-.chat-list {
-    width: 30%;
-    border-right: 1px solid #ecf0f1;
-    overflow-y: auto;
-    background: #f8f9fa;
-    min-width: 200px; /* Asegura un ancho mínimo */
-}
+        #sendButton {
+            padding: 10px 15px;
+            background: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
 
-.chat-room {
-    padding: 15px;
-    border-bottom: 1px solid #ecf0f1;
-    cursor: pointer;
-    transition: background 0.2s;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+        #sendButton:hover {
+            background: #27ae60;
+        }
+        
+        /* Estilos de autenticación (similares a talonario.html) */
+        .auth-status {
+            text-align: center;
+            padding: 10px;
+            color: #e74c3c;
+            font-weight: 600;
+        }
 
-.chat-room:hover {
-    background: #eef1f3;
-}
-
-.chat-room.active {
-    background: #d9e2ef; 
-    font-weight: 700;
-    border-left: 4px solid #3498db;
-}
-
-.chat-room h3 {
-    margin: 0;
-    font-size: 1em;
-    color: #2c3e50;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    flex-grow: 1;
-}
-
-.unread-badge {
-    background: #ff4757;
-    color: white;
-    font-size: 0.7em;
-    padding: 3px 7px;
-    border-radius: 12px;
-    font-weight: 600;
-    display: none; /* Controlado por JS */
-}
-
-/* Área de Mensajes */
-.chat-area {
-    width: 70%;
-    display: flex;
-    flex-direction: column;
-}
-
-.messages {
-    flex-grow: 1;
-    overflow-y: auto;
-    padding: 20px;
-    background: #fefefe;
-}
-
-.messages h2 {
-    text-align: center;
-    color: #95a5a6;
-    margin: 0 0 20px;
-    font-size: 1.1em;
-}
-
-.message {
-    margin-bottom: 15px;
-    max-width: 80%;
-    padding: 10px 15px;
-    border-radius: 15px;
-    line-height: 1.4;
-    position: relative;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.message.admin {
-    background: #3498db; /* Azul */
-    color: white;
-    align-self: flex-end;
-    margin-left: auto;
-    border-bottom-right-radius: 0;
-}
-
-.message.client {
-    background: #ecf0f1; /* Gris claro */
-    color: #2c3e50;
-    align-self: flex-start;
-    margin-right: auto;
-    border-bottom-left-radius: 0;
-}
-
-.message-time {
-    display: block;
-    font-size: 0.7em;
-    margin-top: 5px;
-    text-align: right;
-    color: rgba(255, 255, 255, 0.8); /* Admin */
-}
-
-.message.client .message-time {
-    color: #95a5a6; /* Cliente */
-}
-
-.input-area {
-    padding: 15px;
-    border-top: 1px solid #ecf0f1;
-    display: flex;
-    gap: 10px;
-    background: #ffffff;
-}
-
-#messageInput {
-    flex-grow: 1;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 20px;
-    font-size: 1em;
-    font-family: 'Poppins', sans-serif;
-    resize: none;
-    max-height: 80px; /* Limitar la altura del textarea */
-}
-
-#sendButton {
-    background: #2ecc71;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 45px;
-    height: 45px;
-    font-size: 1.2em;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.2s;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#sendButton:hover {
-    background: #27ae60;
-    transform: scale(1.05);
-}
-
-/* Diseño responsivo para móvil */
-@media (max-width: 768px) {
-    .chat-container {
-        height: 90vh;
-        max-width: 100%;
-        margin-bottom: 10px;
-        flex-direction: column;
-    }
-
-    .chat-list {
-        width: 100%;
-        height: 150px;
-        border-right: none;
-        border-bottom: 1px solid #ecf0f1;
-    }
-
-    .chat-area {
-        width: 100%;
-        flex-grow: 1;
-    }
-
-    .chat-list-container {
-        display: flex;
-        overflow-x: auto;
-        white-space: nowrap;
-    }
-
-    .chat-room {
-        min-width: 150px;
-        border-bottom: none;
-        border-right: 1px solid #ecf0f1;
-    }
-}
+        .auth-info {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .auth-info a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        /* Regresar */
+        #backButton {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 8px 15px;
+            background: #34495e;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        
+        #backButton:hover {
+            background: #2c3e50;
+        }
     </style>
-    <link rel="icon" id="favicon" type="image/png" href="icono-talonariodigital.png">
 </head>
 <body>
-    <header>
-        <h1><i class="fas fa-headset" style="margin-right: 10px;"></i>Chat Soporte</h1>
-        <div id="userInfo">
-            <p id="emailDisplay">admin@example.com</p> 
-            <a href="talonario.html" id="backToTalonarioBtn">
-                <i class="fas fa-arrow-left"></i> Talonario
-            </a>
-            <button id="logoutBtn">
-                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
-            </button>
-        </div>
-    </header>
+    <a id="backButton" href="talonario.html"><i class="fas fa-arrow-left"></i> Volver al Talonario</a>
 
-    <div class="chat-container">
-        <div class="chat-list" id="chatListContainer">
-            <div style="padding: 20px; text-align: center; color: #95a5a6;">Cargando chats...</div>
-        </div>
+    <div id="chatContainer">
+        <h2><i class="fas fa-comments"></i> Chat del Proyecto</h2>
+        
+        <div id="authStatus" class="auth-status">Verificando sesión...</div>
 
-        <div class="chat-area" id="chatArea">
-            <div class="messages" id="messagesContainer">
-                <h2>Selecciona un chat para comenzar.</h2>
+        <div id="messages">
             </div>
-            <div class="input-area" style="display: none;">
-                <textarea id="messageInput" placeholder="Escribe un mensaje..."></textarea>
-                <button id="sendButton"><i class="fas fa-paper-plane"></i></button>
-            </div>
-        </div>
+
+        <form id="messageForm">
+            <textarea id="messageInput" placeholder="Escribe tu mensaje..." rows="1" required></textarea>
+            <button type="submit" id="sendButton" disabled>Enviar</button>
+        </form>
     </div>
-    
-    <div id="notificacion" class="notificacion" style="position: fixed; bottom: 20px; right: 20px; top: auto; animation: none;">
+
+    <div id="notificacion" class="notificacion" style="display: none; position: fixed; top: 20px; right: 20px; background: #00ff7f; color: #fff; padding: 15px 20px; border-radius: 8px; box-shadow: 0 0 15px rgba(0, 255, 127, 0.7); z-index: 2000;">
         <p id="mensajeNotificacion"></p>
     </div>
-    
-    
+
+
 <script type="module">
-    // Importar las funciones necesarias de Firebase
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
     import { 
         getFirestore, 
         collection, 
-        doc, 
-        getDocs, 
-        setDoc, 
-        onSnapshot, 
-        addDoc,
-        updateDoc,
-        // ** Nuevas Importaciones **
-        query,
-        where,
-        writeBatch
-        // *************************
+        addDoc, 
+        query, 
+        orderBy, 
+        limit, 
+        onSnapshot,
+        serverTimestamp 
     } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
     import { 
         getAuth, 
-        signOut, 
-        onAuthStateChanged
+        onAuthStateChanged 
     } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
 
 
@@ -348,332 +216,156 @@ h1 {
         measurementId: "G-FWH8F9SVFM"
     };
 
-    // Inicializar Firebase, Firestore y Auth
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth(app); 
     
-    // --- VARIABLES DE ESTADO ---
-    let uidUsuarioActual = null; 
-    let salaActivaId = null; 
-    let unsubscribeMessages = null; 
-    let unsubscribeChatList = null; 
-    // ----------------------------
-    
-    // Referencias a colecciones
-    const chatsCollectionRef = collection(db, 'chats'); 
-    
-    
-    // 🛑 FUNCIÓN CRÍTICA: Marcar todos los mensajes del chat como leídos
-    async function marcarMensajesComoLeidos() {
-        if (!uidUsuarioActual) return;
+    // Referencia a la colección de mensajes
+    const messagesRef = collection(db, "chats"); 
 
-        try {
-            // 1. Crear una consulta para obtener todos los mensajes que el admin NO ha leído
-            const q = query(chatsCollectionRef, where("leidoAdmin", "==", false));
-            const snapshot = await getDocs(q);
+    let currentUser = null; 
+    let unsubscribeChat = null; 
 
-            if (snapshot.empty) {
-                console.log("No hay mensajes nuevos para marcar como leídos.");
-                return;
-            }
+    // --- ELEMENTOS DEL DOM ---
+    const authStatus = document.getElementById('authStatus');
+    const messageForm = document.getElementById('messageForm');
+    const messageInput = document.getElementById('messageInput');
+    const sendButton = document.getElementById('sendButton');
+    const messagesContainer = document.getElementById('messages');
 
-            // 2. Usar un lote de escritura para actualizar múltiples documentos de forma atómica
-            const batch = writeBatch(db);
-
-            snapshot.forEach((doc) => {
-                // Si el mensaje es del cliente (remitente: 'cliente'), lo marcamos como leído.
-                // Aunque el filtro ya apunta a mensajes no leídos, esto asegura que solo se marquen los que el admin deba leer.
-                const data = doc.data();
-                if (data.remitente === 'cliente' || data.leidoAdmin === false) {
-                    batch.update(doc.ref, { 
-                        leidoAdmin: true 
-                    });
+    // --- FUNCIÓN DE AUTENTICACIÓN Y CONTROL DE ACCESO ---
+    function setupAuthListeners() {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // AUTENTICADO
+                currentUser = user;
+                // 🛑 MODIFICACIÓN 1: Ocultar el email en el estado de autenticación
+                authStatus.innerHTML = `Conectado como: <strong>Administrador</strong>`;
+                authStatus.style.color = '#2ecc71';
+                sendButton.disabled = false;
+                
+                // Iniciar la escucha de mensajes
+                if (!unsubscribeChat) {
+                    startChatListener();
                 }
-            });
-
-            // 3. Aplicar los cambios
-            await batch.commit();
-            console.log(`✅ ${snapshot.size} mensajes marcados como leídos por el administrador.`);
-            
-        } catch (error) {
-            console.error("Error al marcar mensajes como leídos:", error);
-            // No mostramos notificación de error para evitar molestar al usuario
-        }
+            } else {
+                // NO AUTENTICADO: Redireccionar o mostrar mensaje
+                currentUser = null;
+                authStatus.innerHTML = `No autenticado. <a href="index.html">Iniciar sesión</a>.`;
+                authStatus.style.color = '#e74c3c';
+                sendButton.disabled = true;
+                
+                if (unsubscribeChat) {
+                    unsubscribeChat();
+                    unsubscribeChat = null;
+                }
+                
+                // Redireccionar (opcional, si solo quieres que usuarios logueados accedan)
+                // window.location.href = 'index.html'; 
+            }
+        });
     }
-    
-    // ------------------------------------------------------------------
+
 
     // --- FUNCIÓN PARA ENVIAR MENSAJES ---
-    async function sendMessage() {
-        const input = document.getElementById('messageInput');
-        const text = input.value.trim();
+    async function sendMessage(e) {
+        e.preventDefault();
         
-        if (text === "" || !salaActivaId) return;
-
-        const newChat = {
-            salaId: salaActivaId,
-            remitente: 'admin',
-            mensaje: text,
-            timestamp: new Date(),
-            // El admin escribe, por lo que el cliente aún NO lo ha leído.
-            leidoCliente: false, 
-            leidoAdmin: true // Es del admin, así que él lo tiene leído
-        };
+        const text = messageInput.value.trim();
+        
+        if (text.length === 0 || !currentUser) {
+            return; 
+        }
 
         try {
-            await addDoc(chatsCollectionRef, newChat);
-            input.value = '';
-            scrollToBottom();
+            await addDoc(messagesRef, {
+                uid: currentUser.uid,
+                email: currentUser.email,
+                text: text,
+                timestamp: serverTimestamp() // Usa la marca de tiempo del servidor
+            });
+            
+            messageInput.value = ''; // Limpiar el input
+            
         } catch (error) {
             console.error("Error al enviar el mensaje:", error);
             mostrarNotificacion("⚠️ Error al enviar el mensaje.");
         }
     }
-    
-    // --- FUNCIÓN DE RENDERIZADO DE MENSAJES EN TIEMPO REAL ---
-    function iniciarOyenteMensajes(salaId) {
-        if (unsubscribeMessages) {
-            unsubscribeMessages();
-        }
-        
-        // Cargar los mensajes de la sala activa (ordenados por tiempo)
-        const q = query(chatsCollectionRef, where("salaId", "==", salaId));
 
-        unsubscribeMessages = onSnapshot(q, (snapshot) => {
-            const messagesContainer = document.getElementById('messagesContainer');
-            messagesContainer.innerHTML = ''; // Limpiar mensajes anteriores
+    // --- FUNCIÓN PARA ESCUCHAR MENSAJES EN TIEMPO REAL ---
+    function startChatListener() {
+        // Consulta: Ordena por timestamp (ascendente) y limita a los últimos 50 mensajes
+        const q = query(messagesRef, orderBy("timestamp", "asc"), limit(50));
+        
+        unsubscribeChat = onSnapshot(q, (snapshot) => {
             
-            const mensajes = [];
-            snapshot.docs.forEach(doc => {
+            messagesContainer.innerHTML = ''; // Limpiar la lista actual
+            
+            snapshot.forEach(doc => {
                 const data = doc.data();
-                mensajes.push(data);
-            });
-            
-            // Ordenar por timestamp
-            mensajes.sort((a, b) => a.timestamp.toDate() - b.timestamp.toDate());
-            
-            mensajes.forEach(msg => {
-                const isAdmin = msg.remitente === 'admin';
-                const msgElement = document.createElement('div');
-                msgElement.classList.add('message', isAdmin ? 'admin' : 'client');
+                const isMyMessage = data.uid === currentUser.uid;
                 
-                const timeStr = msg.timestamp ? new Date(msg.timestamp.toDate()).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }) : 'Ahora';
+                const bubble = document.createElement('div');
+                bubble.classList.add('message-bubble');
+                bubble.classList.add(isMyMessage ? 'my-message' : 'other-message');
 
-                msgElement.innerHTML = `
-                    ${msg.mensaje}
-                    <span class="message-time">${timeStr}</span>
+                // 🛑 MODIFICACIÓN 2: Ocultar el email en la burbuja del mensaje
+                const senderName = isMyMessage ? 'Tú (Admin)' : 'Cliente'; // Reemplazo por una etiqueta genérica
+                
+                // Formatear la marca de tiempo si existe
+                let time = '';
+                if (data.timestamp && data.timestamp.toDate) {
+                    const date = data.timestamp.toDate();
+                    time = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                }
+
+                bubble.innerHTML = `
+                    <strong>${senderName}:</strong>
+                    ${data.text}
+                    <small>${time}</small>
                 `;
-                messagesContainer.appendChild(msgElement);
+                
+                messagesContainer.appendChild(bubble);
             });
             
-            scrollToBottom();
-            
-            // 💡 Nota: La función marcarMensajesComoLeidos se ejecuta al cargar la página
-            // para limpiar el badge del talonario. Si quieres limpiar el badge de la sala
-            // inmediatamente al hacer clic, puedes ejecutar una versión más específica aquí.
-            
+            // Desplazar al final automáticamente
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
         }, (error) => {
-            console.error("Error al escuchar mensajes:", error);
-            messagesContainer.innerHTML = '<p style="color: red; text-align: center;">Error al cargar mensajes.</p>';
+            console.error("Error al recibir mensajes:", error);
+            mostrarNotificacion("Error de conexión con el chat.");
         });
     }
 
-    // --- FUNCIÓN DE RENDERIZADO DE LISTA DE CHATS ---
-    function iniciarOyenteListaChats() {
-        if (unsubscribeChatList) {
-            unsubscribeChatList();
-        }
-        
-        // Escucha todos los mensajes para reconstruir la lista de salas
-        const q = chatsCollectionRef; 
-        
-        unsubscribeChatList = onSnapshot(q, (snapshot) => {
-            const chatListContainer = document.getElementById('chatListContainer');
-            chatListContainer.innerHTML = ''; 
-            
-            const salas = {}; // Usaremos un mapa para agrupar por salaId
-            
-            snapshot.docs.forEach(doc => {
-                const data = doc.data();
-                const salaId = data.salaId;
-
-                if (!salas[salaId]) {
-                    salas[salaId] = { 
-                        lastMessage: data.mensaje,
-                        lastTimestamp: data.timestamp.toDate(),
-                        clienteEmail: salaId, // Por defecto, usamos el salaId (que es el email del cliente)
-                        unreadCount: 0
-                    };
-                }
-                
-                // Contar mensajes no leídos del cliente
-                if (data.remitente === 'cliente' && data.leidoAdmin === false) {
-                    salas[salaId].unreadCount++;
-                }
-
-                // Asegurar que el mensaje más reciente sea el mostrado en la lista
-                if (data.timestamp.toDate() > salas[salaId].lastTimestamp) {
-                    salas[salaId].lastMessage = data.mensaje;
-                    salas[salaId].lastTimestamp = data.timestamp.toDate();
-                }
-            });
-
-            // Convertir el mapa a un array y ordenar por el último mensaje
-            const salasArray = Object.keys(salas).map(key => ({ salaId: key, ...salas[key] }));
-            salasArray.sort((a, b) => b.lastTimestamp - a.lastTimestamp);
-            
-            if (salasArray.length === 0) {
-                 chatListContainer.innerHTML = '<p style="padding: 20px; text-align: center; color: #95a5a6;">No hay chats activos.</p>';
-                 return;
-            }
-
-            salasArray.forEach(sala => {
-                const salaElement = document.createElement('div');
-                salaElement.classList.add('chat-room');
-                salaElement.dataset.salaId = sala.salaId;
-                
-                if (sala.salaId === salaActivaId) {
-                    salaElement.classList.add('active');
-                }
-                
-                const badge = sala.unreadCount > 0 ? `<span class="unread-badge" style="display: block;">${sala.unreadCount}</span>` : `<span class="unread-badge">0</span>`;
-
-                salaElement.innerHTML = `
-                    <h3>${sala.clienteEmail}</h3>
-                    ${badge}
-                `;
-
-                salaElement.addEventListener('click', () => {
-                    cargarSala(sala.salaId);
-                    
-                    // Asegurar que el badge de la sala activa se limpie inmediatamente
-                    if (sala.unreadCount > 0) {
-                        actualizarLeidoAdmin(sala.salaId);
-                        // El oyente de Firestore se encargará de re-renderizar la lista
-                    }
-                });
-                
-                chatListContainer.appendChild(salaElement);
-            });
-            
-            // Si hay salas, y no hay sala activa, activa la primera
-            if (!salaActivaId && salasArray.length > 0) {
-                cargarSala(salasArray[0].salaId);
-            }
-            
-        }, (error) => {
-            console.error("Error al escuchar lista de chats:", error);
-            chatListContainer.innerHTML = '<p style="color: red; text-align: center;">Error al cargar la lista de chats.</p>';
-        });
-    }
-    
-    // --- FUNCIÓN PARA MARCAR MENSAJES INDIVIDUALES DE UNA SALA COMO LEÍDOS ---
-    async function actualizarLeidoAdmin(salaId) {
-        // Solo actualiza los mensajes de la sala que se está abriendo
-        const q = query(chatsCollectionRef, where("salaId", "==", salaId), where("leidoAdmin", "==", false));
-        const snapshot = await getDocs(q);
-        
-        if (snapshot.empty) return;
-        
-        const batch = writeBatch(db);
-        snapshot.docs.forEach((doc) => {
-             batch.update(doc.ref, { leidoAdmin: true });
-        });
-        
-        await batch.commit();
-    }
-
-
-    // --- GESTIÓN DE SALA ---
-    function cargarSala(salaId) {
-        salaActivaId = salaId;
-        
-        document.getElementById('messagesContainer').innerHTML = '';
-        document.querySelector('.input-area').style.display = 'flex';
-        
-        // Resaltar la sala activa
-        document.querySelectorAll('.chat-room').forEach(room => {
-            room.classList.remove('active');
-            if (room.dataset.salaId === salaId) {
-                room.classList.add('active');
-            }
-        });
-
-        iniciarOyenteMensajes(salaId);
-    }
-    
-    // --- UTILIDADES ---
-    function scrollToBottom() {
-        const messagesContainer = document.getElementById('messagesContainer');
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }
-
+    // --- FUNCIÓN DE NOTIFICACIÓN ---
     function mostrarNotificacion(mensaje) {
         const notificacion = document.getElementById('notificacion');
         const mensajeNotificacion = document.getElementById('mensajeNotificacion');
+        
         notificacion.style.background = mensaje.includes('Error') || mensaje.includes('⚠️') ? '#ff4757' : '#00ff7f';
         notificacion.style.boxShadow = mensaje.includes('Error') || mensaje.includes('⚠️') ? '0 0 15px rgba(255, 71, 87, 0.7)' : '0 0 15px rgba(0, 255, 127, 0.7)';
         
         mensajeNotificacion.textContent = mensaje;
-        notificacion.style.animation = 'slideIn 0.5s ease forwards';
-
-        // Ocultar después de 3 segundos
-        setTimeout(() => {
-            notificacion.style.animation = 'slideOut 0.5s ease forwards';
-        }, 3000);
         
+        notificacion.style.animation = 'none';
+        notificacion.offsetHeight; 
+        notificacion.style.animation = 'slideIn 0.5s ease forwards, slideOut 0.5s ease 2.5s forwards';
+
         notificacion.style.display = 'block';
-    }
-
-    // --- MANEJO DE AUTENTICACIÓN ---
-    function setupAuthListeners() {
-
-        document.getElementById('logoutBtn').onclick = async () => {
-            try {
-                await signOut(auth);
-                mostrarNotificacion("¡Sesión cerrada con éxito!");
-            } catch (error) {
-                console.error("Error al cerrar sesión:", error);
-                mostrarNotificacion("Error al cerrar sesión.");
-            }
-        };
-        
-        document.getElementById('sendButton').onclick = sendMessage;
-        
-        document.getElementById('messageInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
-            }
-        });
-
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                // USUARIO AUTENTICADO
-                uidUsuarioActual = user.uid;
-                document.getElementById('emailDisplay').textContent = user.email; 
-                
-                // 1. Marcar todos los mensajes nuevos como leídos para limpiar el badge del talonario
-                marcarMensajesComoLeidos();
-                
-                // 2. Iniciar la lista de chats en tiempo real
-                iniciarOyenteListaChats();
-                
-            } else {
-                // NINGÚN USUARIO: REDIRECCIÓN INMEDIATA
-                uidUsuarioActual = null;
-                if (unsubscribeMessages) unsubscribeMessages();
-                if (unsubscribeChatList) unsubscribeChatList();
-                
-                window.location.href = 'index.html'; 
-            }
-        });
+        setTimeout(() => { notificacion.style.display = 'none'; }, 3000);
     }
 
     // --- INICIALIZACIÓN ---
     document.addEventListener('DOMContentLoaded', () => {
+        messageForm.addEventListener('submit', sendMessage);
         setupAuthListeners();
+        
+        // Ajustar altura del input de mensaje
+        messageInput.addEventListener('input', () => {
+            messageInput.style.height = 'auto';
+            messageInput.style.height = (messageInput.scrollHeight) + 'px';
+        });
     });
 
 </script>
