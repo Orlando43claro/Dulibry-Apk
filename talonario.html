@@ -9,7 +9,7 @@
     
     <style>
 /* --- ESTILOS CSS COMPLETOS --- */
-
+/* ... (Se mantiene igual) ... */
 body {
     font-family: 'Poppins', sans-serif;
     background: linear-gradient(135deg, #e0eafc, #cfdef3);
@@ -20,8 +20,6 @@ body {
     align-items: center;
     min-height: 100vh;
 }
-
-/* --- INICIO: CAMBIOS EN ESTILOS PARA EL ENCABEZADO Y BOTONES --- */
 header {
     background-color: #ffffff;
     color: #2c3e50;
@@ -30,52 +28,42 @@ header {
     width: 100%;
     max-width: 900px;
     margin-bottom: 20px;
-    /* Añadimos Flexbox para alinear el contenido */
     display: flex;
-    justify-content: space-between; /* Espacia el título de los botones */
+    justify-content: space-between;
     align-items: center;
     flex-wrap: wrap; 
     box-sizing: border-box; 
-    border-radius: 8px 8px 0 0; /* Estilo de borde solo arriba */
+    border-radius: 8px 8px 0 0;
 }
-
 .logo {
     display: flex;
     align-items: center;
     gap: 10px;
 }
-
 h1 {
     color: #2c3e50;
-    font-size: clamp(1.5em, 5vw, 2em); /* Tamaño ajustado para coexistir con botones */
+    font-size: clamp(1.5em, 5vw, 2em);
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
     margin: 0;
 }
-
 p#subtituloPrincipal {
     color: #34495e;
     font-size: clamp(0.9em, 3vw, 1em);
     margin: 10px 0;
-    width: 100%; /* Asegura que tome el ancho completo bajo el título */
+    width: 100%;
     text-align: center;
 }
-
-/* Alineación horizontal de los botones y ocultar el email */
 #userInfo {
     margin-top: 0; 
     display: flex;
     align-items: center;
-    justify-content: flex-end; /* Alinea los botones a la derecha */
+    justify-content: flex-end;
     flex-wrap: wrap;
-    gap: 10px; /* Espacio entre botones */
+    gap: 10px;
 }
-
-/* Ocultar el Correo Electrónico (Requisito del usuario) */
 #emailDisplay {
     display: none !important; 
 }
-
-/* Estilo general de los botones del header */
 #userInfo button, #abrirChatBtn {
     border: none;
     padding: 8px 16px;
@@ -83,50 +71,41 @@ p#subtituloPrincipal {
     font-weight: 600;
     cursor: pointer;
     transition: background 0.2s, transform 0.2s;
-    text-decoration: none; /* Para el <a> del Chat */
+    text-decoration: none;
     display: flex;
     align-items: center;
     gap: 5px;
-    color: white; /* Color de texto predeterminado */
-    font-size: 0.9em; /* Ajuste para que quepa bien */
+    color: white;
+    font-size: 0.9em;
 }
-
-/* Estilos específicos */
 #abrirPerfilBtn {
-    background: #3498db; /* Azul */
+    background: #3498db;
 }
 #logoutBtn {
-    background: #e74c3c; /* Rojo */
+    background: #e74c3c;
 }
-
-/* Estilo para el botón Chat con Badge (Notificación) */
 #abrirChatBtn {
-    background: #2ecc71; /* Verde */
-    position: relative; /* Necesario para posicionar el badge */
+    background: #2ecc71;
+    position: relative;
 }
-
 #userInfo button:hover, #abrirChatBtn:hover {
     opacity: 0.9;
     transform: translateY(-1px);
 }
-
-/* Estilo para el Badge/Notificación del Chat */
 #chatNotificationBadge {
     position: absolute;
     top: -8px;
     right: -8px;
-    background: #ff4757; /* Rojo llamativo */
+    background: #ff4757;
     color: white;
     font-size: 0.75em;
     font-weight: 700;
     padding: 2px 6px;
     border-radius: 50%;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-    display: none; /* Inicialmente oculto */
-    line-height: 1; /* Asegura que el texto se centre bien */
+    display: none;
+    line-height: 1;
 }
-
-/* Estilo para resaltar el botón cuando hay notificaciones */
 .notificacion-activa {
     animation: pulse 1s infinite;
 }
@@ -135,9 +114,6 @@ p#subtituloPrincipal {
     70% { box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); }
     100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
 }
-
-
-/* Media Query para móvil */
 @media (max-width: 650px) {
     header {
         flex-direction: column;
@@ -152,19 +128,15 @@ p#subtituloPrincipal {
     }
     #userInfo {
         width: 100%;
-        justify-content: center; /* Centrar los botones en móvil */
+        justify-content: center;
         margin-top: 10px;
     }
     #userInfo button, #abrirChatBtn {
-        flex-grow: 1; /* Ocupar espacio equitativamente */
+        flex-grow: 1;
         text-align: center;
         justify-content: center;
     }
 }
-/* --- FIN: CAMBIOS EN ESTILOS PARA EL ENCABEZADO Y BOTONES --- */
-
-
-/* Estilos del cuerpo se mantienen iguales */
 .controles {
     display: flex;
     gap: 15px;
@@ -173,7 +145,6 @@ p#subtituloPrincipal {
     flex-wrap: wrap;
     margin-top: 10px;
 }
-/* ... (el resto de tus estilos CSS se mantiene sin cambios) ... */
 #contadorVendidos {
     color: #2c3e50;
     font-size: 1em;
@@ -183,12 +154,10 @@ p#subtituloPrincipal {
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
-
 .filtros {
     display: flex;
     gap: 8px;
 }
-
 .filtro {
     position: relative;
     padding: 6px 12px;
@@ -202,55 +171,43 @@ p#subtituloPrincipal {
     font-weight: 600;
     transition: background 0.2s, box-shadow 0.2s;
 }
-
 .filtro.activo {
     background: #1e90ff;
     box-shadow: 0 0 8px rgba(30, 144, 255, 0.5);
 }
-
 #filtroTodo:hover:not(.activo) {
     background: #3498db;
 }
-
 #filtroDisponible {
     background: #0288d1;
 }
-
 #filtroDisponible.activo {
     background: #0277bd;
     box-shadow: 0 0 8px rgba(2, 136, 209, 0.5);
 }
-
 #filtroDisponible:hover:not(.activo) {
     background: #039be5;
 }
-
 #filtroApartado {
     background: #e74c3c;
 }
-
 #filtroApartado.activo {
     background: #c0392b;
     box-shadow: 0 0 8px rgba(231, 76, 60, 0.5);
 }
-
 #filtroApartado:hover:not(.activo) {
     background: #d32f2f;
 }
-
 #filtroPagado {
     background: #2ecc71;
 }
-
 #filtroPagado.activo {
     background: #27ae60;
     box-shadow: 0 0 8px rgba(46, 204, 113, 0.5);
 }
-
 #filtroPagado:hover:not(.activo) {
     background: #4caf50;
 }
-
 .notificacion-filtro {
     position: absolute;
     top: -8px;
@@ -263,8 +220,6 @@ p#subtituloPrincipal {
     border-radius: 50%;
     box-shadow: 0 0 4px rgba(255, 71, 87, 0.7);
 }
-
-/* ESTILOS DE LOS BOTONES DE GESTIÓN DE USUARIO */
 #limpiarTalonario {
     padding: 8px 16px;
     color: #fff;
@@ -281,8 +236,6 @@ p#subtituloPrincipal {
     background: linear-gradient(135deg, #e67e22, #d35400);
     transform: scale(1.05);
 }
-
-
 #talonario, #listaBoletos {
     max-width: 900px;
     width: 100%;
@@ -290,7 +243,6 @@ p#subtituloPrincipal {
     box-sizing: border-box;
     margin-bottom: 20px;
 }
-
 table {
     width: 100%;
     border-collapse: separate;
@@ -301,7 +253,6 @@ table {
     padding: 8px;
     table-layout: fixed;
 }
-
 td {
     width: 10%;
     height: 50px;
@@ -314,40 +265,31 @@ td {
     cursor: pointer;
     transition: transform 0.2s, box-shadow 0.2s;
 }
-
 td:hover {
     transform: scale(1.05);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
-
 td.seleccionado {
     background: linear-gradient(135deg, #e74c3c, #c0392b);
     color: #fff;
 }
-
 td.pagado {
     background: linear-gradient(135deg, #2ecc71, #27ae60);
     color: #fff;
 }
-
-/* IMPORTANTE: Ícono 💵 */
 td.pagado > span {
     font-size: 1.5em; 
     line-height: 1;
 }
-
 td.oculta {
     display: none !important;
 }
-
-/* --- ESTILOS DE LA LISTA DE BOLETOS --- */
 #listaBoletos h2 {
     color: #2c3e50;
     margin-top: 30px;
     text-align: center;
     width: 100%;
 }
-
 #lista {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
@@ -356,7 +298,6 @@ td.oculta {
     list-style: none; 
     width: 100%;
 }
-
 .boleto-card {
     background: #ffffff;
     padding: 15px;
@@ -368,20 +309,16 @@ td.oculta {
     flex-direction: column;
     justify-content: space-between;
 }
-
 .boleto-card:hover {
     transform: translateY(-3px);
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
 }
-
 .boleto-card.apartado {
     border-left-color: #e74c3c; 
 }
-
 .boleto-card.pagado {
     border-left-color: #2ecc71; 
 }
-
 .info-numero {
     font-size: 1.2em;
     font-weight: 700;
@@ -391,7 +328,6 @@ td.oculta {
     align-items: center;
     margin-bottom: 5px;
 }
-
 .info-nombre {
     font-size: 1em;
     color: #7f8c8d;
@@ -400,7 +336,6 @@ td.oculta {
     overflow: hidden;
     text-overflow: ellipsis;
 }
-
 .info-estado {
     padding: 4px 8px;
     border-radius: 5px;
@@ -408,18 +343,14 @@ td.oculta {
     font-weight: 600;
     text-transform: uppercase;
 }
-
 .boleto-card.apartado .info-estado {
     background: #fbe6e4;
     color: #e74c3c;
 }
-
 .boleto-card.pagado .info-estado {
     background: #e4fbe7;
     color: #2ecc71;
 }
-
-/* Resto de estilos (modales, notificaciones, etc.) se mantienen igual */
 .modal {
     display: none;
     position: fixed;
@@ -432,7 +363,6 @@ td.oculta {
     align-items: center;
     z-index: 1000;
 }
-
 .modal-content {
     background: #fff;
     padding: 20px;
@@ -442,50 +372,42 @@ td.oculta {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     position: relative;
 }
-
 .cerrar {
     float: right;
     font-size: 1.5em;
     cursor: pointer;
     color: #333;
 }
-
 .modal-content h2 {
     margin: 0 0 15px;
     color: #2c3e50;
     font-size: 1.4em;
 }
-
 .modal-content p {
     color: #34495e;
     font-size: 1em;
     margin: 10px 0 20px;
 }
-
 .modal-content form {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
-
 .modal-content label {
     font-size: 1em;
     color: #34495e;
 }
-
 .modal-content input {
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 1em;
 }
-
 .modal-content .botones {
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
 }
-
 .modal-content button {
     padding: 10px;
     background: #2980b9;
@@ -498,32 +420,25 @@ td.oculta {
     flex: 1;
     min-width: 100px;
 }
-
 .modal-content button:hover {
     background: #3498db;
 }
-
 .modal-content #eliminarBoleto {
     background: #e74c3c;
 }
-
 .modal-content #eliminarBoleto:hover {
     background: #c0392b;
 }
-
 .modal-content #marcarPago {
     background: #27ae60;
 }
-
 .modal-content #marcarPago:hover {
     background: #2ecc71;
 }
-
 .modal-content #marcarPago:disabled {
     background: #95a5a6;
     cursor: not-allowed;
 }
-
 .modal-content #enviarWhatsApp {
     display: flex;
     justify-content: center;
@@ -541,44 +456,35 @@ td.oculta {
     text-decoration: none; 
     font-weight: 600; 
 }
-
 .modal-content #enviarWhatsApp:hover {
     background: #128c7e;
 }
-
-/* Estilos específicos para los modales de confirmación */
 #modalConfirmarLimpieza .modal-content p,
 #modalConfirmarEliminacion .modal-content p {
     color: #34495e;
     font-size: 1em;
     margin: 10px 0 20px;
 }
-
 #modalConfirmarLimpieza .botones,
 #modalConfirmarEliminacion .botones {
     justify-content: space-between;
 }
-
 #confirmarLimpieza,
 #confirmarEliminacion { 
     background: #e74c3c;
 }
-
 #confirmarLimpieza:hover,
 #confirmarEliminacion:hover { 
     background: #c0392b;
 }
-
 #cancelarLimpieza,
 #cancelarEliminacion { 
     background: #7f8c8d;
 }
-
 #cancelarLimpieza:hover,
 #cancelarEliminacion:hover { 
     background: #95a5a6;
 }
-
 .notificacion {
     position: fixed;
     top: 20px;
@@ -592,23 +498,19 @@ td.oculta {
     display: none;
     animation: slideIn 0.5s ease forwards, slideOut 0.5s ease 2.5s forwards;
 }
-
 .notificacion p {
     margin: 0;
     font-size: 1em;
     font-weight: 600;
 }
-
 @keyframes slideIn {
     from { transform: translateX(100%); opacity: 0; }
     to { transform: translateX(0); opacity: 1; }
 }
-
 @keyframes slideOut {
     from { transform: translateX(0); opacity: 1; }
     to { transform: translateX(100%); opacity: 0; }
 }
-
 .icono {
     width: 50px;
     height: 50px;
@@ -621,7 +523,6 @@ td.oculta {
     box-shadow: 0 0 10px rgba(30, 144, 255, 0.5), 0 0 15px rgba(255, 71, 87, 0.5);
     animation: borderGlow 3s infinite alternate;
 }
-
 @keyframes borderGlow {
     0% {
         box-shadow: 0 0 10px rgba(30, 144, 255, 0.5), 0 0 15px rgba(255, 71, 87, 0.5);
@@ -630,7 +531,6 @@ td.oculta {
         box-shadow: 0 0 15px rgba(30, 144, 255, 0.7), 0 0 20px rgba(255, 71, 87, 0.7);
     }
 }
-
 .boleto {
     width: 40.5px;
     height: 20.75px;
@@ -643,7 +543,6 @@ td.oculta {
     transform: rotate(-10deg) translateY(1.25px);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4), 0 0 5px rgba(30, 144, 255, 0.3);
 }
-
 .numero {
     color: #ffffff;
     font-family: 'Poppins', sans-serif;
@@ -651,7 +550,6 @@ td.oculta {
     font-size: 7px;
     text-shadow: 0 0 2px rgba(255, 255, 255, 0.5);
 }
-
 .check {
     width: 6px;
     height: 6px;
@@ -662,7 +560,6 @@ td.oculta {
     right: -2px;
     box-shadow: 0 0 5px rgba(0, 255, 127, 0.7);
 }
-
 .check::before {
     content: '';
     position: absolute;
@@ -673,7 +570,6 @@ td.oculta {
     top: 1.5px;
     left: 2.25px;
 }
-
 .check::after {
     content: '';
     position: absolute;
@@ -684,7 +580,6 @@ td.oculta {
     top: 2.5px;
     left: 1.75px;
 }
-
 @media (max-width: 600px) {
     table {
         border-spacing: 4px;
@@ -764,13 +659,11 @@ td.oculta {
         font-size: 0.9em;
     }
     
-    /* Adaptar la lista al móvil */
     #lista {
         grid-template-columns: 1fr;
     }
     
 }
-
 @media (max-width: 400px) {
     table {
         border-spacing: 3px;
@@ -802,9 +695,9 @@ td.oculta {
                 <i class="fas fa-user-circle"></i> Perfil
             </button>
             
-            <a href="admin.html" id="abrirChatBtn">
+            <a href="chat.html" id="abrirChatBtn">
                 <i class="fas fa-comments"></i> Chat
-                <span id="chatNotificationBadge">0</span>
+                <span id="chatNotificationBadge">!</span>
             </a>
             
             <button id="logoutBtn">
@@ -921,13 +814,16 @@ td.oculta {
         collection, 
         doc, 
         getDocs, 
+        getDoc, // <- Importación necesaria para leer el timestamp
         setDoc, 
         updateDoc, 
         deleteDoc, 
         writeBatch,
         onSnapshot,
         query, 
-        where 
+        where,
+        orderBy, // <- Importación necesaria para ordenar
+        limit 
     } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
     import { 
         getAuth, 
@@ -959,7 +855,7 @@ td.oculta {
     let uidUsuarioActual = null; 
     let boletosRef; 
     let unsubscribe = null; 
-    let unsubscribeChatNotifications = null; // Variable para el oyente de chat
+    let unsubscribeChatNotifications = null; 
 
     let filtroActivo = 'todo';
     let datosActuales = { seleccionados: [], pagados: [], datosBoletos: {} }; 
@@ -1003,7 +899,7 @@ td.oculta {
     function iniciarOyenteNotificacionesChat() {
         if (!uidUsuarioActual) return;
         
-        // Detener oyente anterior si existe
+        // 1. Detener oyente anterior
         if (unsubscribeChatNotifications) {
             unsubscribeChatNotifications();
             unsubscribeChatNotifications = null;
@@ -1012,27 +908,54 @@ td.oculta {
         const badge = document.getElementById('chatNotificationBadge');
         const chatButton = document.getElementById('abrirChatBtn');
         
-        // Consulta: mensajes donde 'leidoAdmin' es falso.
+        const metadataRef = doc(db, "users", uidUsuarioActual, "metadata", "chatStatus");
         const chatRef = collection(db, "chats"); 
-        // Importante: Asume que los mensajes del cliente se guardan con leidoAdmin: false
-        const q = query(chatRef, where("leidoAdmin", "==", false)); 
 
-        console.log(`Estableciendo oyente de notificaciones de chat para mensajes no leídos.`);
+        console.log(`Estableciendo oyente de notificaciones de chat para UID: ${uidUsuarioActual}`);
 
-        unsubscribeChatNotifications = onSnapshot(q, (snapshot) => {
-            const mensajesNoLeidos = snapshot.size;
+        // 2. Establecer oyente en el documento de metadatos del usuario.
+        // Esto se dispara cada vez que el usuario lee el chat y actualiza su timestamp.
+        unsubscribeChatNotifications = onSnapshot(metadataRef, async (metadataDoc) => {
+            let lastReadTimestamp = null;
+
+            if (metadataDoc.exists()) {
+                lastReadTimestamp = metadataDoc.data().lastReadTimestamp;
+            }
+
+            // 3. Obtener el último mensaje del chat global para comparar.
+            const qLastMessage = query(chatRef, orderBy("timestamp", "desc"), limit(1));
+            const lastMessageSnapshot = await getDocs(qLastMessage);
             
+            let mensajesNoLeidos = 0;
+
+            if (!lastMessageSnapshot.empty) {
+                const lastMessage = lastMessageSnapshot.docs[0].data();
+                const lastMessageTimestamp = lastMessage.timestamp;
+                const isMyOwnMessage = lastMessage.uid === uidUsuarioActual; // No te avises a ti mismo
+
+                // Verificar si el último mensaje es posterior a la última lectura.
+                if (lastMessageTimestamp && lastReadTimestamp) {
+                    // Si el timestamp del mensaje es mayor al timestamp de mi última lectura
+                    if (lastMessageTimestamp.toMillis() > lastReadTimestamp.toMillis() && !isMyOwnMessage) {
+                        mensajesNoLeidos = 1; // Basta con saber que hay uno nuevo.
+                    }
+                } 
+                // Si nunca he leído (lastReadTimestamp es null) y no es mi mensaje, hay 1 nuevo.
+                else if (!lastReadTimestamp && !isMyOwnMessage) {
+                    mensajesNoLeidos = 1;
+                }
+            }
+
+
             if (mensajesNoLeidos > 0) { 
-                // Muestra la cantidad
-                badge.textContent = mensajesNoLeidos > 99 ? '99+' : mensajesNoLeidos; 
+                badge.textContent = '!'; // O usar la cantidad si decides hacer un query más amplio
                 badge.style.display = 'block';
-                // Agrega la animación de pulso
                 chatButton.classList.add('notificacion-activa');
             } else {
-                // Oculta la notificación
                 badge.style.display = 'none';
                 chatButton.classList.remove('notificacion-activa');
             }
+
         }, (error) => {
             console.error("Error al escuchar notificaciones de chat:", error);
             badge.style.display = 'none'; 
@@ -1089,81 +1012,7 @@ td.oculta {
         });
     }
 
-    // --- FUNCIONES CORE DE GESTIÓN DE PERFIL (Se mantienen iguales) ---
-
-    async function handleChangePassword(e) {
-        e.preventDefault();
-        
-        const currentPassword = document.getElementById('currentPassword').value;
-        const newPassword = document.getElementById('newPassword').value;
-        
-        const user = auth.currentUser; 
-
-        if (!user || !user.email) {
-            mostrarNotificacion("⚠️ Error: No hay sesión activa.");
-            return;
-        }
-
-        if (newPassword.length < 6) {
-            mostrarNotificacion("⚠️ Error: La nueva contraseña debe tener al menos 6 caracteres.");
-            return;
-        }
-
-        try {
-            const credential = EmailAuthProvider.credential(user.email, currentPassword);
-            await reauthenticateWithCredential(user, credential);
-            await updatePassword(user, newPassword);
-            
-            mostrarNotificacion("✅ Contraseña actualizada con éxito. Cerrando sesión...");
-            
-            document.getElementById('cambioContrasenaForm').reset();
-            document.getElementById('perfilModal').style.display = 'none';
-
-            await signOut(auth);
-            window.location.href = 'index.html';
-
-        } catch (error) {
-            let msg = 'Error desconocido al cambiar la contraseña.';
-            if (error.code === 'auth/wrong-password') {
-                msg = 'Contraseña actual incorrecta.';
-            } else if (error.code === 'auth/requires-recent-login') {
-                msg = 'Por seguridad, debes iniciar sesión de nuevo para cambiar tu contraseña.';
-            } else if (error.code === 'auth/weak-password') {
-                msg = 'La nueva contraseña es muy débil.';
-            }
-            mostrarNotificacion(`⚠️ Error: ${msg}`);
-        }
-    }
-
-    function setupPerfilListeners() {
-        const perfilModal = document.getElementById('perfilModal');
-        const abrirPerfilBtn = document.getElementById('abrirPerfilBtn');
-        const cerrarPerfilModal = document.getElementById('cerrarPerfilModal');
-        const cambioContrasenaForm = document.getElementById('cambioContrasenaForm');
-        const userEmailDisplayModal = document.getElementById('userEmailDisplayModal');
-        const emailDisplayHeader = document.getElementById('emailDisplay');
-
-        cambioContrasenaForm.addEventListener('submit', handleChangePassword);
-
-        abrirPerfilBtn.onclick = () => {
-            userEmailDisplayModal.textContent = auth.currentUser ? auth.currentUser.email : 'Cargando...';
-            perfilModal.style.display = 'flex';
-        };
-
-        cerrarPerfilModal.onclick = () => {
-            perfilModal.style.display = 'none';
-            document.getElementById('cambioContrasenaForm').reset(); 
-        };
-
-        perfilModal.onclick = (event) => {
-            if (event.target === perfilModal) {
-                perfilModal.style.display = 'none';
-                document.getElementById('cambioContrasenaForm').reset();
-            }
-        };
-    }
-    // -----------------------------------------------------------------
-
+    // --- (Resto de funciones: setupPerfilListeners, setupAuthListeners, etc. se mantienen igual) ---
 
     // --- MANEJO DE AUTENTICACIÓN (GUARDIA DE SEGURIDAD) ---
 
@@ -1236,7 +1085,79 @@ td.oculta {
         });
     }
 
-    // --- LÓGICA DE INICIALIZACIÓN Y CARGA (Resto de funciones se mantienen igual) ---
+    // --- (Resto de funciones se mantienen igual) ---
+
+    async function handleChangePassword(e) {
+        e.preventDefault();
+        
+        const currentPassword = document.getElementById('currentPassword').value;
+        const newPassword = document.getElementById('newPassword').value;
+        
+        const user = auth.currentUser; 
+
+        if (!user || !user.email) {
+            mostrarNotificacion("⚠️ Error: No hay sesión activa.");
+            return;
+        }
+
+        if (newPassword.length < 6) {
+            mostrarNotificacion("⚠️ Error: La nueva contraseña debe tener al menos 6 caracteres.");
+            return;
+        }
+
+        try {
+            const credential = EmailAuthProvider.credential(user.email, currentPassword);
+            await reauthenticateWithCredential(user, credential);
+            await updatePassword(user, newPassword);
+            
+            mostrarNotificacion("✅ Contraseña actualizada con éxito. Cerrando sesión...");
+            
+            document.getElementById('cambioContrasenaForm').reset();
+            document.getElementById('perfilModal').style.display = 'none';
+
+            await signOut(auth);
+            window.location.href = 'index.html';
+
+        } catch (error) {
+            let msg = 'Error desconocido al cambiar la contraseña.';
+            if (error.code === 'auth/wrong-password') {
+                msg = 'Contraseña actual incorrecta.';
+            } else if (error.code === 'auth/requires-recent-login') {
+                msg = 'Por seguridad, debes iniciar sesión de nuevo para cambiar tu contraseña.';
+            } else if (error.code === 'auth/weak-password') {
+                msg = 'La nueva contraseña es muy débil.';
+            }
+            mostrarNotificacion(`⚠️ Error: ${msg}`);
+        }
+    }
+
+    function setupPerfilListeners() {
+        const perfilModal = document.getElementById('perfilModal');
+        const abrirPerfilBtn = document.getElementById('abrirPerfilBtn');
+        const cerrarPerfilModal = document.getElementById('cerrarPerfilModal');
+        const cambioContrasenaForm = document.getElementById('cambioContrasenaForm');
+        const userEmailDisplayModal = document.getElementById('userEmailDisplayModal');
+        const emailDisplayHeader = document.getElementById('emailDisplay');
+
+        cambioContrasenaForm.addEventListener('submit', handleChangePassword);
+
+        abrirPerfilBtn.onclick = () => {
+            userEmailDisplayModal.textContent = auth.currentUser ? auth.currentUser.email : 'Cargando...';
+            perfilModal.style.display = 'flex';
+        };
+
+        cerrarPerfilModal.onclick = () => {
+            perfilModal.style.display = 'none';
+            document.getElementById('cambioContrasenaForm').reset(); 
+        };
+
+        perfilModal.onclick = (event) => {
+            if (event.target === perfilModal) {
+                perfilModal.style.display = 'none';
+                document.getElementById('cambioContrasenaForm').reset();
+            }
+        };
+    }
 
     document.addEventListener('DOMContentLoaded', () => {
         console.log('Paso 0: DOM cargado, inicializando TalonarioDigital...');
@@ -1254,8 +1175,6 @@ td.oculta {
         setupAuthListeners();
     });
 
-    // --- FUNCIONES CORE (Generar Talonario, Mostrar Modal, etc. se mantienen igual) ---
-    
     function generarTalonario(seleccionados, pagados, datosBoletos) { 
         const talonario = document.getElementById('talonario');
         if (!talonario) return;
