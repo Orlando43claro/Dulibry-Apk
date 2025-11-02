@@ -959,7 +959,7 @@ td.oculta {
     let uidUsuarioActual = null; 
     let boletosRef; 
     let unsubscribe = null; 
-    let unsubscribeChatNotifications = null; 
+    let unsubscribeChatNotifications = null; // Variable para el oyente de chat
 
     let filtroActivo = 'todo';
     let datosActuales = { seleccionados: [], pagados: [], datosBoletos: {} }; 
@@ -999,7 +999,7 @@ td.oculta {
         await batch.commit();
     }
     
-    // 🚀 --- FUNCIÓN PARA INICIAR OYENTE DE NOTIFICACIONES DEL CHAT ---
+    // 🚀 --- FUNCIÓN PARA INICIAR OYENTE DE NOTIFICACIONES DEL CHAT (CLAVE) ---
     function iniciarOyenteNotificacionesChat() {
         if (!uidUsuarioActual) return;
         
@@ -1014,7 +1014,7 @@ td.oculta {
         
         // Consulta: mensajes donde 'leidoAdmin' es falso.
         const chatRef = collection(db, "chats"); 
-        // Importante: Asegúrate de que los mensajes de cliente se guarden con leidoAdmin: false
+        // Importante: Asume que los mensajes del cliente se guardan con leidoAdmin: false
         const q = query(chatRef, where("leidoAdmin", "==", false)); 
 
         console.log(`Estableciendo oyente de notificaciones de chat para mensajes no leídos.`);
@@ -1023,10 +1023,13 @@ td.oculta {
             const mensajesNoLeidos = snapshot.size;
             
             if (mensajesNoLeidos > 0) { 
-                badge.textContent = mensajesNoLeidos > 99 ? '99+' : mensajesNoLeidos; // Limita a 99+
+                // Muestra la cantidad
+                badge.textContent = mensajesNoLeidos > 99 ? '99+' : mensajesNoLeidos; 
                 badge.style.display = 'block';
+                // Agrega la animación de pulso
                 chatButton.classList.add('notificacion-activa');
             } else {
+                // Oculta la notificación
                 badge.style.display = 'none';
                 chatButton.classList.remove('notificacion-activa');
             }
@@ -1208,7 +1211,6 @@ td.oculta {
                 }
                 
                 // 2. Iniciar la escucha de Notificaciones del Chat
-                // 🛑 Aseguramos que se inicie solo si no está activo.
                 if (!unsubscribeChatNotifications) { 
                     iniciarOyenteNotificacionesChat();
                 }
