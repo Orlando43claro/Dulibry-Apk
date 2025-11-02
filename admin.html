@@ -27,7 +27,7 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
-            height: 80vh; 
+            height: 80vh;
             overflow: hidden;
         }
 
@@ -190,10 +190,10 @@
         limit, 
         onSnapshot,
         serverTimestamp,
-        // Funciones para marcar como leído
-        getDocs, 
-        writeBatch,
-        where
+        // 🚀 NUEVAS IMPORTACIONES PARA MARCAR COMO LEÍDO PERSONALIZADO
+        getDocs,
+        setDoc, // Usaremos setDoc para el estado de lectura
+        doc
     } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
     import { 
         getAuth, 
@@ -229,36 +229,38 @@
     const sendButton = document.getElementById('sendButton');
     const messagesContainer = document.getElementById('messages');
 
-    // 🚀 FUNCIÓN CRÍTICA: MARCAR CHAT COMO LEÍDO AL ENTRAR
+    // 🚀 FUNCIÓN CRÍTICA: MARCAR CHAT COMO LEÍDO AL ENTRAR (PERSONALIZADO)
     async function marcarChatComoLeido() {
-        console.log("MarcarChatComoLeido: Buscando mensajes no leídos.");
+        if (!currentUser) return;
         
-        // Consulta: mensajes donde 'leidoAdmin' es falso.
-        const q = query(messagesRef, where("leidoAdmin", "==", false));
+        console.log("MarcarChatComoLeido: Buscando el timestamp del último mensaje.");
+        
+        // 1. Encontrar el último timestamp en la colección global de chats.
+        const qLastMessage = query(messagesRef, orderBy("timestamp", "desc"), limit(1));
         
         try {
-            const snapshot = await getDocs(q);
+            const snapshot = await getDocs(qLastMessage);
             
-            if (snapshot.empty) {
-                console.log("No hay mensajes nuevos para marcar como leídos.");
-                return; 
+            let latestTimestamp = serverTimestamp(); // Usar serverTimestamp si no hay mensajes.
+            
+            if (!snapshot.empty) {
+                // Obtenemos la marca de tiempo del mensaje más reciente.
+                latestTimestamp = snapshot.docs[0].data().timestamp; 
             }
+            
+            // 2. Actualizar el documento de metadatos del usuario logueado.
+            // users/{uid}/metadata/chatStatus
+            const userMetadataRef = doc(db, "users", currentUser.uid, "metadata", "chatStatus");
 
-            // Usar un batch (lote) para actualizar varios documentos a la vez
-            const batch = writeBatch(db);
-            
-            snapshot.docs.forEach((doc) => {
-                // Preparar la actualización: cambiar 'leidoAdmin' a true
-                batch.update(doc.ref, { leidoAdmin: true });
-            });
-            
-            // Ejecutar el batch
-            await batch.commit();
-            console.log(`✅ ${snapshot.size} mensajes marcados como leídos por el Propietario.`);
+            await setDoc(userMetadataRef, { 
+                lastReadTimestamp: latestTimestamp 
+            }, { merge: true }); // Usamos merge: true por si ya hay otros datos.
+
+            console.log(`✅ Estado de lectura actualizado para ${currentUser.uid}.`);
             
         } catch (error) {
             console.error("❌ Error al marcar mensajes como leídos:", error);
-            mostrarNotificacion("⚠️ Error al borrar notificaciones de chat.");
+            mostrarNotificacion("⚠️ Error al actualizar estado de lectura.");
         }
     }
 
@@ -278,8 +280,10 @@
                     startChatListener();
                 }
                 
-                // 🛑 LLAMADA CRÍTICA: Marcar todos los mensajes como leídos AL ENTRAR
-                marcarChatComoLeido(); 
+                // 🛑 LLAMADA CRÍTICA: Marcar el chat como leído AL ENTRAR
+                // Se ejecuta después de un pequeño retraso para asegurar que los oyentes estén listos
+                // y que el último mensaje tenga un timestamp asignado.
+                setTimeout(marcarChatComoLeido, 1000); 
                 
             } else {
                 // NO AUTENTICADO: Redireccionar o mostrar mensaje
@@ -297,7 +301,7 @@
     }
 
 
-    // --- FUNCIÓN PARA ENVIAR MENSAJES (MODIFICADA) ---
+    // --- FUNCIÓN PARA ENVIAR MENSAJES (MODIFICADA: SIN leidoAdmin) ---
     async function sendMessage(e) {
         e.preventDefault();
         
@@ -314,12 +318,14 @@
                 displayName: currentUser.displayName || 'Propietario', 
                 text: text,
                 timestamp: serverTimestamp(),
-                
-                // 💥 CAMBIO CRÍTICO: ¡Marcar como NO LEÍDO para que los otros Propietarios vean la notificación!
-                leidoAdmin: false, 
+                // 💥 CRÍTICO: Eliminamos leidoAdmin, ahora se usa el timestamp.
             });
             
             messageInput.value = ''; // Limpiar el input
+            
+            // Opcional: Después de enviar un mensaje, actualiza inmediatamente mi estado de lectura
+            // para que mi propia notificación desaparezca rápidamente si es que se activó.
+            marcarChatComoLeido(); 
             
         } catch (error) {
             console.error("Error al enviar el mensaje:", error);
