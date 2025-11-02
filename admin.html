@@ -197,7 +197,11 @@
         orderBy, 
         limit, 
         onSnapshot,
-        serverTimestamp 
+        serverTimestamp,
+        // 🚀 NUEVAS IMPORTACIONES PARA MARCAR COMO LEÍDO
+        getDocs, 
+        writeBatch,
+        where
     } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
     import { 
         getAuth, 
@@ -233,13 +237,46 @@
     const sendButton = document.getElementById('sendButton');
     const messagesContainer = document.getElementById('messages');
 
+    // 🚀 FUNCIÓN CRÍTICA: MARCAR CHAT COMO LEÍDO AL ENTRAR
+    async function marcarChatComoLeido() {
+        console.log("MarcarChatComoLeido: Buscando mensajes no leídos.");
+        
+        // Consulta: mensajes donde 'leidoAdmin' es falso.
+        const q = query(messagesRef, where("leidoAdmin", "==", false));
+        
+        try {
+            const snapshot = await getDocs(q);
+            
+            if (snapshot.empty) {
+                console.log("No hay mensajes nuevos para marcar como leídos.");
+                return; 
+            }
+
+            // Usar un batch (lote) para actualizar varios documentos a la vez
+            const batch = writeBatch(db);
+            
+            snapshot.docs.forEach((doc) => {
+                // Preparar la actualización: cambiar 'leidoAdmin' a true
+                batch.update(doc.ref, { leidoAdmin: true });
+            });
+            
+            // Ejecutar el batch
+            await batch.commit();
+            console.log(`✅ ${snapshot.size} mensajes marcados como leídos.`);
+            
+        } catch (error) {
+            console.error("❌ Error al marcar mensajes como leídos:", error);
+            mostrarNotificacion("⚠️ Error al borrar notificaciones de chat.");
+        }
+    }
+
+
     // --- FUNCIÓN DE AUTENTICACIÓN Y CONTROL DE ACCESO ---
     function setupAuthListeners() {
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 // AUTENTICADO
                 currentUser = user;
-                // 🛑 MODIFICACIÓN 1: Ocultar el email en el estado de autenticación (manteniendo 'Administrador')
                 authStatus.innerHTML = `Conectado como: <strong>Administrador</strong>`;
                 authStatus.style.color = '#2ecc71';
                 sendButton.disabled = false;
@@ -248,6 +285,10 @@
                 if (!unsubscribeChat) {
                     startChatListener();
                 }
+                
+                // 🛑 LLAMADA CRÍTICA: Marcar todos los mensajes como leídos
+                marcarChatComoLeido(); 
+                
             } else {
                 // NO AUTENTICADO: Redireccionar o mostrar mensaje
                 currentUser = null;
@@ -259,9 +300,6 @@
                     unsubscribeChat();
                     unsubscribeChat = null;
                 }
-                
-                // Redireccionar (opcional, si solo quieres que usuarios logueados accedan)
-                // window.location.href = 'index.html'; 
             }
         });
     }
@@ -281,10 +319,12 @@
             await addDoc(messagesRef, {
                 uid: currentUser.uid,
                 email: currentUser.email,
-                // ⬅️ CAMBIO 1: Guardar el displayName del usuario
                 displayName: currentUser.displayName || 'Admin', 
                 text: text,
-                timestamp: serverTimestamp() // Usa la marca de tiempo del servidor
+                timestamp: serverTimestamp(),
+                // 🛑 CAMBIO CRÍTICO: El admin siempre envía mensajes como LEÍDOS por él mismo.
+                leidoAdmin: true, 
+                // Se asume que el lado del cliente pone 'leidoAdmin: false' y el admin lo lee.
             });
             
             messageInput.value = ''; // Limpiar el input
@@ -312,13 +352,10 @@
                 bubble.classList.add('message-bubble');
                 bubble.classList.add(isMyMessage ? 'my-message' : 'other-message');
 
-                // ⬅️ CAMBIO 2: Usar displayName para identificar al remitente
                 let senderName;
                 if (isMyMessage) {
-                    // Si es mi mensaje, uso mi displayName guardado o mi apodo por defecto
                     senderName = currentUser.displayName || 'Tú (Admin)'; 
                 } else {
-                    // Si es el mensaje de otro, uso el displayName guardado en el mensaje o 'Cliente'
                     senderName = data.displayName || 'Cliente'; 
                 }
                 
@@ -349,6 +386,7 @@
 
     // --- FUNCIÓN DE NOTIFICACIÓN ---
     function mostrarNotificacion(mensaje) {
+        // ... (Esta función se mantiene igual, ya estaba bien)
         const notificacion = document.getElementById('notificacion');
         const mensajeNotificacion = document.getElementById('mensajeNotificacion');
         
