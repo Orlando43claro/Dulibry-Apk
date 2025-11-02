@@ -197,11 +197,11 @@
         limit, 
         onSnapshot,
         serverTimestamp,
-        // 🚀 Funciones para el seguimiento de lectura personalizado
-        getDocs, 
+        // 🚀 Importaciones NECESARIAS para marcar como leído
+        getDocs,
         setDoc,
         doc,
-        Timestamp // 🚨 Importación crucial para crear marcas de tiempo locales
+        Timestamp 
     } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
     import { 
         getAuth, 
@@ -237,7 +237,7 @@
     const sendButton = document.getElementById('sendButton');
     const messagesContainer = document.getElementById('messages');
 
-    // 🚀 FUNCIÓN CRÍTICA: MARCAR CHAT COMO LEÍDO AL ENTRAR (PERSONALIZADO Y SEGURO)
+    // 🚀 FUNCIÓN CRÍTICA: MARCAR CHAT COMO LEÍDO AL ENTRAR (CORREGIDA)
     async function marcarChatComoLeido() {
         if (!currentUser) {
             console.warn("marcarChatComoLeido: Usuario no disponible. Cancelando operación.");
@@ -255,40 +255,47 @@
             let latestTimestamp; 
             
             if (!snapshot.empty) {
-                // Hay mensajes: Usar el timestamp del mensaje más reciente (que puede ser un objeto Timestamp o un objeto con toDate())
+                // Hay mensajes: Usar el timestamp del mensaje más reciente.
                 latestTimestamp = snapshot.docs[0].data().timestamp; 
             } else {
                 // No hay mensajes: Usar un Timestamp actual del cliente.
                 latestTimestamp = Timestamp.now();
             }
             
+            // 🚨 VALIDACIÓN EXTRA: Asegurarse de que el objeto sea un Timestamp válido si no se obtuvo de Firestore
+            if (latestTimestamp && latestTimestamp.toDate) {
+                 // Es un objeto de tiempo de Firebase (del servidor o local), válido.
+            } else {
+                // Si por alguna razón es nulo o no tiene el método toDate, usamos Timestamp.now() como fallback.
+                latestTimestamp = Timestamp.now();
+            }
+            
             // 2. Actualizar el documento de metadatos del usuario logueado.
+            // users/{uid}/metadata/chatStatus
             const userMetadataRef = doc(db, "users", currentUser.uid, "metadata", "chatStatus");
 
-            // 🚨 CRÍTICO: Guardar el timestamp en el documento personal del usuario
-            if (latestTimestamp) {
-                await setDoc(userMetadataRef, { 
-                    lastReadTimestamp: latestTimestamp 
-                }, { merge: true }); 
-                console.log(`✅ [Lectura] Estado de lectura actualizado correctamente.`);
-            } else {
-                 console.warn("[Lectura] No se pudo obtener un timestamp válido. No se guardó el estado de lectura.");
-            }
+            await setDoc(userMetadataRef, { 
+                lastReadTimestamp: latestTimestamp 
+            }, { merge: true }); 
+            
+            console.log(`✅ [Lectura] Estado de lectura actualizado correctamente.`);
             
         } catch (error) {
             console.error("❌ Error al marcar mensajes como leídos:", error);
-            mostrarNotificacion("⚠️ Error al actualizar estado de lectura.");
+            // 🚨 Muestra el error de Firestore en la consola para saber la causa exacta (generalmente permisos)
+            console.error("Detalle del Error de Firestore:", error.message, error.code);
+            mostrarNotificacion("⚠️ Error al actualizar estado de lectura. (Revisa consola)");
         }
     }
 
 
-    // --- FUNCIÓN DE AUTENTICACIÓN Y CONTROL DE ACCESO ---
+    // --- FUNCIÓN DE AUTENTICACIÓN Y CONTROL DE ACCESO (AJUSTADA) ---
     function setupAuthListeners() {
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 // AUTENTICADO
                 currentUser = user;
-                authStatus.innerHTML = `Conectado como: <strong>Propietario</strong>`;
+                authStatus.innerHTML = `Conectado como: <strong>Administrador</strong>`;
                 authStatus.style.color = '#2ecc71';
                 sendButton.disabled = false;
                 
@@ -330,7 +337,7 @@
             await addDoc(messagesRef, {
                 uid: currentUser.uid,
                 email: currentUser.email,
-                displayName: currentUser.displayName || 'Propietario', 
+                displayName: currentUser.displayName || 'Admin', 
                 text: text,
                 timestamp: serverTimestamp(),
             });
@@ -338,7 +345,6 @@
             messageInput.value = ''; // Limpiar el input
             
             // Opcional: Después de enviar un mensaje, actualiza inmediatamente mi estado de lectura
-            // para que mi propia notificación desaparezca rápidamente en `talonario.html`.
             marcarChatComoLeido(); 
             
         } catch (error) {
@@ -366,9 +372,9 @@
 
                 let senderName;
                 if (isMyMessage) {
-                    senderName = currentUser.displayName || 'Tú'; 
+                    senderName = currentUser.displayName || 'Tú (Admin)'; 
                 } else {
-                    senderName = data.displayName || 'Propietario'; 
+                    senderName = data.displayName || 'Cliente'; 
                 }
                 
                 // Formatear la marca de tiempo si existe
