@@ -7,7 +7,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* --- ESTILOS ESPECÍFICOS DEL CHAT (SIN CAMBIOS) --- */
+
+        /* --- ESTILOS ESPECÍFICOS DEL CHAT --- */
         body {
             font-family: 'Poppins', sans-serif;
             background: linear-gradient(135deg, #e0eafc, #cfdef3);
@@ -27,7 +28,7 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
-            height: 80vh;
+            height: 80vh; /* Altura fija para el chat */
             overflow: hidden;
         }
 
@@ -39,6 +40,7 @@
             border-bottom: 1px solid #eee;
         }
 
+        /* Área de visualización de mensajes */
         #messages {
             flex-grow: 1;
             padding: 15px;
@@ -48,6 +50,7 @@
             gap: 10px;
         }
 
+        /* Estilo de mensaje individual */
         .message-bubble {
             max-width: 80%;
             padding: 10px 15px;
@@ -72,6 +75,7 @@
             text-align: right;
         }
 
+        /* Mensajes del usuario actual (a la derecha) */
         .my-message {
             align-self: flex-end;
             background: linear-gradient(135deg, #3498db, #1e90ff);
@@ -79,6 +83,7 @@
             border-bottom-right-radius: 4px;
         }
         
+        /* Mensajes de otros usuarios (a la izquierda) */
         .other-message {
             align-self: flex-start;
             background: #ecf0f1;
@@ -87,6 +92,7 @@
             border-bottom-left-radius: 4px;
         }
 
+        /* Formulario de entrada */
         #messageForm {
             display: flex;
             padding: 15px;
@@ -119,10 +125,10 @@
             background: #27ae60;
         }
         
+        /* Estilos de autenticación */
         .auth-status {
             text-align: center;
             padding: 10px;
-            color: #e74c3c;
             font-weight: 600;
         }
 
@@ -137,6 +143,7 @@
             font-weight: 600;
         }
         
+        /* Regresar */
         #backButton {
             position: absolute;
             top: 20px;
@@ -190,10 +197,11 @@
         limit, 
         onSnapshot,
         serverTimestamp,
-        // 🚀 NUEVAS IMPORTACIONES PARA MARCAR COMO LEÍDO PERSONALIZADO
-        getDocs,
-        setDoc, // Usaremos setDoc para el estado de lectura
-        doc
+        // 🚀 Funciones para el seguimiento de lectura personalizado
+        getDocs, 
+        setDoc,
+        doc,
+        Timestamp // 🚨 Importación crucial para crear marcas de tiempo locales
     } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
     import { 
         getAuth, 
@@ -216,7 +224,7 @@
     const db = getFirestore(app);
     const auth = getAuth(app); 
     
-    // Referencia a la colección de mensajes (GLOBAL)
+    // Referencia a la colección de mensajes
     const messagesRef = collection(db, "chats"); 
 
     let currentUser = null; 
@@ -229,34 +237,43 @@
     const sendButton = document.getElementById('sendButton');
     const messagesContainer = document.getElementById('messages');
 
-    // 🚀 FUNCIÓN CRÍTICA: MARCAR CHAT COMO LEÍDO AL ENTRAR (PERSONALIZADO)
+    // 🚀 FUNCIÓN CRÍTICA: MARCAR CHAT COMO LEÍDO AL ENTRAR (PERSONALIZADO Y SEGURO)
     async function marcarChatComoLeido() {
-        if (!currentUser) return;
+        if (!currentUser) {
+            console.warn("marcarChatComoLeido: Usuario no disponible. Cancelando operación.");
+            return;
+        }
         
-        console.log("MarcarChatComoLeido: Buscando el timestamp del último mensaje.");
+        console.log(`[Lectura] Buscando último mensaje para actualizar estado de ${currentUser.uid}.`);
         
-        // 1. Encontrar el último timestamp en la colección global de chats.
+        // Consulta: Obtiene el mensaje más reciente
         const qLastMessage = query(messagesRef, orderBy("timestamp", "desc"), limit(1));
         
         try {
             const snapshot = await getDocs(qLastMessage);
             
-            let latestTimestamp = serverTimestamp(); // Usar serverTimestamp si no hay mensajes.
+            let latestTimestamp; 
             
             if (!snapshot.empty) {
-                // Obtenemos la marca de tiempo del mensaje más reciente.
+                // Hay mensajes: Usar el timestamp del mensaje más reciente (que puede ser un objeto Timestamp o un objeto con toDate())
                 latestTimestamp = snapshot.docs[0].data().timestamp; 
+            } else {
+                // No hay mensajes: Usar un Timestamp actual del cliente.
+                latestTimestamp = Timestamp.now();
             }
             
             // 2. Actualizar el documento de metadatos del usuario logueado.
-            // users/{uid}/metadata/chatStatus
             const userMetadataRef = doc(db, "users", currentUser.uid, "metadata", "chatStatus");
 
-            await setDoc(userMetadataRef, { 
-                lastReadTimestamp: latestTimestamp 
-            }, { merge: true }); // Usamos merge: true por si ya hay otros datos.
-
-            console.log(`✅ Estado de lectura actualizado para ${currentUser.uid}.`);
+            // 🚨 CRÍTICO: Guardar el timestamp en el documento personal del usuario
+            if (latestTimestamp) {
+                await setDoc(userMetadataRef, { 
+                    lastReadTimestamp: latestTimestamp 
+                }, { merge: true }); 
+                console.log(`✅ [Lectura] Estado de lectura actualizado correctamente.`);
+            } else {
+                 console.warn("[Lectura] No se pudo obtener un timestamp válido. No se guardó el estado de lectura.");
+            }
             
         } catch (error) {
             console.error("❌ Error al marcar mensajes como leídos:", error);
@@ -269,7 +286,7 @@
     function setupAuthListeners() {
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // AUTENTICADO (ASUMIMOS QUE ES UN PROPIETARIO)
+                // AUTENTICADO
                 currentUser = user;
                 authStatus.innerHTML = `Conectado como: <strong>Propietario</strong>`;
                 authStatus.style.color = '#2ecc71';
@@ -280,10 +297,8 @@
                     startChatListener();
                 }
                 
-                // 🛑 LLAMADA CRÍTICA: Marcar el chat como leído AL ENTRAR
-                // Se ejecuta después de un pequeño retraso para asegurar que los oyentes estén listos
-                // y que el último mensaje tenga un timestamp asignado.
-                setTimeout(marcarChatComoLeido, 1000); 
+                // 🛑 LLAMADA CRÍTICA: Marcar el chat como leído de inmediato al entrar
+                marcarChatComoLeido(); 
                 
             } else {
                 // NO AUTENTICADO: Redireccionar o mostrar mensaje
@@ -301,7 +316,7 @@
     }
 
 
-    // --- FUNCIÓN PARA ENVIAR MENSAJES (MODIFICADA: SIN leidoAdmin) ---
+    // --- FUNCIÓN PARA ENVIAR MENSAJES ---
     async function sendMessage(e) {
         e.preventDefault();
         
@@ -318,13 +333,12 @@
                 displayName: currentUser.displayName || 'Propietario', 
                 text: text,
                 timestamp: serverTimestamp(),
-                // 💥 CRÍTICO: Eliminamos leidoAdmin, ahora se usa el timestamp.
             });
             
             messageInput.value = ''; // Limpiar el input
             
             // Opcional: Después de enviar un mensaje, actualiza inmediatamente mi estado de lectura
-            // para que mi propia notificación desaparezca rápidamente si es que se activó.
+            // para que mi propia notificación desaparezca rápidamente en `talonario.html`.
             marcarChatComoLeido(); 
             
         } catch (error) {
@@ -333,7 +347,7 @@
         }
     }
 
-    // --- FUNCIÓN PARA ESCUCHAR MENSAJES EN TIEMPO REAL (SIN CAMBIOS) ---
+    // --- FUNCIÓN PARA ESCUCHAR MENSAJES EN TIEMPO REAL ---
     function startChatListener() {
         // Consulta: Ordena por timestamp (ascendente) y limita a los últimos 50 mensajes
         const q = query(messagesRef, orderBy("timestamp", "asc"), limit(50));
@@ -382,7 +396,7 @@
         });
     }
 
-    // --- FUNCIÓN DE NOTIFICACIÓN (SIN CAMBIOS) ---
+    // --- FUNCIÓN DE NOTIFICACIÓN ---
     function mostrarNotificacion(mensaje) {
         const notificacion = document.getElementById('notificacion');
         const mensajeNotificacion = document.getElementById('mensajeNotificacion');
@@ -400,7 +414,7 @@
         setTimeout(() => { notificacion.style.display = 'none'; }, 3000);
     }
 
-    // --- INICIALIZACIÓN (SIN CAMBIOS) ---
+    // --- INICIALIZACIÓN ---
     document.addEventListener('DOMContentLoaded', () => {
         messageForm.addEventListener('submit', sendMessage);
         setupAuthListeners();
