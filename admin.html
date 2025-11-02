@@ -7,8 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-
-        /* --- ESTILOS ESPECÍFICOS DEL CHAT --- */
+        /* --- ESTILOS ESPECÍFICOS DEL CHAT (SIN CAMBIOS) --- */
         body {
             font-family: 'Poppins', sans-serif;
             background: linear-gradient(135deg, #e0eafc, #cfdef3);
@@ -28,7 +27,7 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
-            height: 80vh; /* Altura fija para el chat */
+            height: 80vh; 
             overflow: hidden;
         }
 
@@ -40,7 +39,6 @@
             border-bottom: 1px solid #eee;
         }
 
-        /* Área de visualización de mensajes */
         #messages {
             flex-grow: 1;
             padding: 15px;
@@ -50,7 +48,6 @@
             gap: 10px;
         }
 
-        /* Estilo de mensaje individual */
         .message-bubble {
             max-width: 80%;
             padding: 10px 15px;
@@ -75,7 +72,6 @@
             text-align: right;
         }
 
-        /* Mensajes del usuario actual (a la derecha) */
         .my-message {
             align-self: flex-end;
             background: linear-gradient(135deg, #3498db, #1e90ff);
@@ -83,7 +79,6 @@
             border-bottom-right-radius: 4px;
         }
         
-        /* Mensajes de otros usuarios (a la izquierda) */
         .other-message {
             align-self: flex-start;
             background: #ecf0f1;
@@ -92,7 +87,6 @@
             border-bottom-left-radius: 4px;
         }
 
-        /* Formulario de entrada */
         #messageForm {
             display: flex;
             padding: 15px;
@@ -125,7 +119,6 @@
             background: #27ae60;
         }
         
-        /* Estilos de autenticación (similares a talonario.html) */
         .auth-status {
             text-align: center;
             padding: 10px;
@@ -144,7 +137,6 @@
             font-weight: 600;
         }
         
-        /* Regresar */
         #backButton {
             position: absolute;
             top: 20px;
@@ -198,7 +190,7 @@
         limit, 
         onSnapshot,
         serverTimestamp,
-        // 🚀 NUEVAS IMPORTACIONES PARA MARCAR COMO LEÍDO
+        // Funciones para marcar como leído
         getDocs, 
         writeBatch,
         where
@@ -224,7 +216,7 @@
     const db = getFirestore(app);
     const auth = getAuth(app); 
     
-    // Referencia a la colección de mensajes
+    // Referencia a la colección de mensajes (GLOBAL)
     const messagesRef = collection(db, "chats"); 
 
     let currentUser = null; 
@@ -262,7 +254,7 @@
             
             // Ejecutar el batch
             await batch.commit();
-            console.log(`✅ ${snapshot.size} mensajes marcados como leídos.`);
+            console.log(`✅ ${snapshot.size} mensajes marcados como leídos por el Propietario.`);
             
         } catch (error) {
             console.error("❌ Error al marcar mensajes como leídos:", error);
@@ -275,9 +267,9 @@
     function setupAuthListeners() {
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // AUTENTICADO
+                // AUTENTICADO (ASUMIMOS QUE ES UN PROPIETARIO)
                 currentUser = user;
-                authStatus.innerHTML = `Conectado como: <strong>Administrador</strong>`;
+                authStatus.innerHTML = `Conectado como: <strong>Propietario</strong>`;
                 authStatus.style.color = '#2ecc71';
                 sendButton.disabled = false;
                 
@@ -286,7 +278,7 @@
                     startChatListener();
                 }
                 
-                // 🛑 LLAMADA CRÍTICA: Marcar todos los mensajes como leídos
+                // 🛑 LLAMADA CRÍTICA: Marcar todos los mensajes como leídos AL ENTRAR
                 marcarChatComoLeido(); 
                 
             } else {
@@ -305,7 +297,7 @@
     }
 
 
-    // --- FUNCIÓN PARA ENVIAR MENSAJES ---
+    // --- FUNCIÓN PARA ENVIAR MENSAJES (MODIFICADA) ---
     async function sendMessage(e) {
         e.preventDefault();
         
@@ -319,12 +311,12 @@
             await addDoc(messagesRef, {
                 uid: currentUser.uid,
                 email: currentUser.email,
-                displayName: currentUser.displayName || 'Admin', 
+                displayName: currentUser.displayName || 'Propietario', 
                 text: text,
                 timestamp: serverTimestamp(),
-                // 🛑 CAMBIO CRÍTICO: El admin siempre envía mensajes como LEÍDOS por él mismo.
-                leidoAdmin: true, 
-                // Se asume que el lado del cliente pone 'leidoAdmin: false' y el admin lo lee.
+                
+                // 💥 CAMBIO CRÍTICO: ¡Marcar como NO LEÍDO para que los otros Propietarios vean la notificación!
+                leidoAdmin: false, 
             });
             
             messageInput.value = ''; // Limpiar el input
@@ -335,7 +327,7 @@
         }
     }
 
-    // --- FUNCIÓN PARA ESCUCHAR MENSAJES EN TIEMPO REAL ---
+    // --- FUNCIÓN PARA ESCUCHAR MENSAJES EN TIEMPO REAL (SIN CAMBIOS) ---
     function startChatListener() {
         // Consulta: Ordena por timestamp (ascendente) y limita a los últimos 50 mensajes
         const q = query(messagesRef, orderBy("timestamp", "asc"), limit(50));
@@ -354,9 +346,9 @@
 
                 let senderName;
                 if (isMyMessage) {
-                    senderName = currentUser.displayName || 'Tú (Admin)'; 
+                    senderName = currentUser.displayName || 'Tú'; 
                 } else {
-                    senderName = data.displayName || 'Cliente'; 
+                    senderName = data.displayName || 'Propietario'; 
                 }
                 
                 // Formatear la marca de tiempo si existe
@@ -384,9 +376,8 @@
         });
     }
 
-    // --- FUNCIÓN DE NOTIFICACIÓN ---
+    // --- FUNCIÓN DE NOTIFICACIÓN (SIN CAMBIOS) ---
     function mostrarNotificacion(mensaje) {
-        // ... (Esta función se mantiene igual, ya estaba bien)
         const notificacion = document.getElementById('notificacion');
         const mensajeNotificacion = document.getElementById('mensajeNotificacion');
         
@@ -403,7 +394,7 @@
         setTimeout(() => { notificacion.style.display = 'none'; }, 3000);
     }
 
-    // --- INICIALIZACIÓN ---
+    // --- INICIALIZACIÓN (SIN CAMBIOS) ---
     document.addEventListener('DOMContentLoaded', () => {
         messageForm.addEventListener('submit', sendMessage);
         setupAuthListeners();
