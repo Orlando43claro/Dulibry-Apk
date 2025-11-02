@@ -4,65 +4,70 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TalonarioDigital - Acceso</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght+400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-/* --- ESTILOS CSS COMPLETOS --- */
+
+/* --- 🎨 ESTILOS CSS MEJORADOS Y MODERNOS --- */
 
 body {
     font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #e0eafc, #cfdef3);
+    /* Fondo con gradiente más vivo y atractivo */
+    background: linear-gradient(135deg, #84fab0 0%, #1e90ff 100%); 
     margin: 0;
-    padding: 20px;
+    padding: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center; /* Centrar verticalmente en la pantalla */
     min-height: 100vh;
 }
 
 header {
     text-align: center;
-    margin-bottom: 20px;
-    width: 100%;
+    margin-bottom: 30px;
 }
 
 .logo {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 15px;
 }
 
 h1 {
-    color: #2c3e50;
-    font-size: clamp(1.8em, 5vw, 2.5em);
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    color: #fff; /* Texto blanco para el contraste */
+    font-size: clamp(2em, 5vw, 3em);
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Sombra para resaltar */
     margin: 0;
 }
 
-p {
-    color: #34495e;
-    font-size: clamp(0.9em, 3vw, 1em);
-    margin: 10px 0;
+#subtituloPrincipal {
+    color: #f0f0f0; /* Subtítulo más claro */
+    font-size: clamp(1em, 3vw, 1.2em);
+    margin-top: 10px;
 }
 
-/* --- VISTA DE LOGIN/TALONARIO --- */
+/* --- VISTA DE LOGIN/TALONARIO (CARD ELEGANTE) --- */
 
-/* CAMBIO CLAVE: Ocultar la vista de autenticación al cargar para evitar el parpadeo */
 .vista {
-    display: none; /* Empezamos oculto */
-    width: 100%;
+    display: none; /* Empieza oculto para evitar el parpadeo (FOUC) */
+    width: 90%;
     max-width: 400px;
-    background: #fff;
+    background: #ffffff;
     padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    margin-top: 50px;
+    border-radius: 15px; /* Bordes más suaves */
+    /* Sombra más profunda para un efecto 3D */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); 
+    margin: 20px 0;
 }
 
 .vista h2 {
     text-align: center;
     color: #2c3e50;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
+    font-weight: 600;
 }
 
 .vista form {
@@ -71,40 +76,72 @@ p {
     gap: 15px;
 }
 
+/* Estilo de Inputs con iconos */
+.input-group {
+    position: relative;
+}
+
+.input-group i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #95a5a6;
+    font-size: 1em;
+}
+
 .vista input[type="email"], 
 .vista input[type="password"] {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    width: 100%;
+    padding: 12px 12px 12px 40px; /* Aumentado el padding para el icono */
+    border: 1px solid #ddd;
+    border-radius: 8px;
     font-size: 1em;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    box-sizing: border-box;
+}
+
+.vista input:focus {
+    border-color: #1e90ff;
+    box-shadow: 0 0 5px rgba(30, 144, 255, 0.5);
+    outline: none;
 }
 
 .vista button {
-    padding: 10px;
-    background: #1e90ff;
+    padding: 12px;
+    /* Gradiente atractivo para el botón principal */
+    background: linear-gradient(45deg, #1e90ff, #007bff); 
     color: #fff;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 1em;
-    font-weight: 600;
-    transition: background 0.2s;
+    font-size: 1.1em;
+    font-weight: 700;
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-transform: uppercase;
 }
 
 .vista button:hover {
-    background: #007bff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-#toggleAuth {
+#toggleAuth, #olvidoContrasena, #volverLogin {
     background: none;
-    color: #34495e;
+    color: #1e90ff;
     border: none;
     font-size: 0.9em;
-    margin-top: 10px;
+    margin-top: 15px;
     cursor: pointer;
     text-decoration: underline;
+    text-align: center;
+    padding: 5px;
+    transition: color 0.2s;
 }
-/* --------------------------------- */
+
+#toggleAuth:hover, #olvidoContrasena:hover, #volverLogin:hover {
+    color: #007bff;
+}
 
 /* Estilos para notificaciones */
 .notificacion {
@@ -119,105 +156,29 @@ p {
     z-index: 2000;
     display: none;
     animation: slideIn 0.5s ease forwards, slideOut 0.5s ease 2.5s forwards;
-}
-
-.notificacion p {
-    margin: 0;
-    font-size: 1em;
     font-weight: 600;
 }
 
-@keyframes slideIn {
-    from { transform: translateX(100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-}
-
-@keyframes slideOut {
-    from { transform: translateX(0); opacity: 1; }
-    to { transform: translateX(100%); opacity: 0; }
-}
-
-/* Estilos para el icono */
+/* Ocultar el icono y el boleto del header en el login para simplicidad visual */
 .icono {
-    width: 50px;
-    height: 50px;
-    background: linear-gradient(135deg, #1e90ff, #ff4757);
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    box-shadow: 0 0 10px rgba(30, 144, 255, 0.5), 0 0 15px rgba(255, 71, 87, 0.5);
-    animation: borderGlow 3s infinite alternate;
+    display: none; 
 }
 
-@keyframes borderGlow {
-    0% {
-        box-shadow: 0 0 10px rgba(30, 144, 255, 0.5), 0 0 15px rgba(255, 71, 87, 0.5);
+/* Media Queries para móviles */
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
     }
-    100% {
-        box-shadow: 0 0 15px rgba(30, 144, 255, 0.7), 0 0 20px rgba(255, 71, 87, 0.7);
-    }
-}
-
-.boleto {
-    width: 40.5px;
-    height: 20.75px;
-    background: linear-gradient(135deg, #1e90ff, #ff4757);
-    border-radius: 2.5px;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transform: rotate(-10deg) translateY(1.25px);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4), 0 0 5px rgba(30, 144, 255, 0.3);
-}
-
-.numero {
-    color: #ffffff;
-    font-family: 'Poppins', sans-serif;
-    font-weight: 700;
-    font-size: 7px;
-    text-shadow: 0 0 2px rgba(255, 255, 255, 0.5);
-}
-
-.check {
-    width: 6px;
-    height: 6px;
-    background: #00ff7f;
-    border-radius: 50%;
-    position: absolute;
-    top: -2px;
-    right: -2px;
-    box-shadow: 0 0 5px rgba(0, 255, 127, 0.7);
-}
-
-.check::before {
-    content: '';
-    position: absolute;
-    width: 1.25px;
-    height: 2.5px;
-    background: #ffffff;
-    transform: rotate(45deg);
-    top: 1.5px;
-    left: 2.25px;
-}
-
-.check::after {
-    content: '';
-    position: absolute;
-    width: 1.25px;
-    height: 1.25px;
-    background: #ffffff;
-    transform: rotate(-45deg);
-    top: 2.5px;
-    left: 1.75px;
-}
-
-
-@media (max-width: 600px) {
     .vista {
         padding: 20px;
+    }
+    h1 {
+        font-size: 2em;
+    }
+    .notificacion {
+        top: 10px;
+        right: 10px;
+        font-size: 0.9em;
     }
 }
     </style>
@@ -235,16 +196,36 @@ p {
             <h1>TalonarioDigital</h1>
         </div>
         <p id="subtituloPrincipal">Verificando sesión...</p>
-        </header>
+    </header>
 
     <div id="authView" class="vista">
         <h2 id="authTitle">Iniciar Sesión</h2>
         <form id="authForm">
-            <input type="email" id="email" placeholder="Correo Electrónico" required>
-            <input type="password" id="password" placeholder="Contraseña (mín. 6 caracteres)" required>
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="email" placeholder="Correo Electrónico" required>
+            </div>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="password" placeholder="Contraseña (mín. 6 caracteres)" required>
+            </div>
             <button type="submit" id="authSubmitBtn">Acceder</button>
         </form>
         <button id="toggleAuth">¿No tienes cuenta? Regístrate</button>
+        <button id="olvidoContrasena">¿Olvidaste tu Contraseña?</button> 
+    </div>
+    
+    <div id="recuperacionView" class="vista" style="display: none;">
+        <h2>Recuperar Contraseña</h2>
+        <form id="recuperacionForm">
+             <p style="text-align: center; color: #34495e; margin-bottom: 20px;">Introduce tu correo electrónico para enviarte un enlace de restablecimiento.</p>
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="recuperacionEmail" placeholder="Correo Electrónico" required>
+            </div>
+            <button type="submit" id="recuperacionSubmitBtn">Enviar Enlace</button>
+        </form>
+        <button id="volverLogin">Volver al Login</button>
     </div>
 
     <div id="notificacion" class="notificacion" style="display: none;">
@@ -253,16 +234,17 @@ p {
 
     
 <script type="module">
-    // Importar solo las funciones necesarias para la autenticación
+    // Importar funciones de Firebase Auth
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
     import { 
         getAuth, 
         signInWithEmailAndPassword, 
         createUserWithEmailAndPassword, 
+        sendPasswordResetEmail, // <--- Nueva función para recuperación
         onAuthStateChanged 
     } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
 
-    // Tu configuración de Firebase
+    // Tu configuración de Firebase (¡Asegúrate de que esta sea la real!)
     const firebaseConfig = {
         apiKey: "AIzaSyDY5KBUwbDwjeCYY7ILXkRB5EJBVoVAmF0", 
         authDomain: "talonario-rifa.firebaseapp.com",
@@ -281,8 +263,9 @@ p {
     function mostrarNotificacion(mensaje) {
         const notificacion = document.getElementById('notificacion');
         const mensajeNotificacion = document.getElementById('mensajeNotificacion');
-        notificacion.style.background = mensaje.includes('Error') ? '#ff4757' : '#00ff7f';
-        notificacion.style.boxShadow = mensaje.includes('Error') ? '0 0 15px rgba(255, 71, 87, 0.7)' : '0 0 15px rgba(0, 255, 127, 0.7)';
+        // Cambiar color para errores
+        notificacion.style.background = mensaje.includes('Error') || mensaje.includes('⚠️') ? '#ff4757' : '#00ff7f';
+        notificacion.style.boxShadow = mensaje.includes('Error') || mensaje.includes('⚠️') ? '0 0 15px rgba(255, 71, 87, 0.7)' : '0 0 15px rgba(0, 255, 127, 0.7)';
         
         mensajeNotificacion.textContent = mensaje;
         notificacion.style.animation = 'none';
@@ -293,15 +276,45 @@ p {
 
 
     function setupAuthListeners() {
+        // Elementos de la vista de Autenticación
+        const authView = document.getElementById('authView'); 
         const authForm = document.getElementById('authForm');
         const emailInput = document.getElementById('email');
         const passwordInput = document.getElementById('password');
         const toggleAuthBtn = document.getElementById('toggleAuth');
         const authTitle = document.getElementById('authTitle');
         const authSubmitBtn = document.getElementById('authSubmitBtn');
-        const authView = document.getElementById('authView'); // Referencia al contenedor
+        const olvidoContrasenaBtn = document.getElementById('olvidoContrasena');
         const subtituloPrincipal = document.getElementById('subtituloPrincipal');
+        
+        // Elementos de la vista de Recuperación
+        const recuperacionView = document.getElementById('recuperacionView');
+        const recuperacionForm = document.getElementById('recuperacionForm');
+        const recuperacionEmailInput = document.getElementById('recuperacionEmail');
+        const volverLoginBtn = document.getElementById('volverLogin');
+        
         let isLogin = true;
+
+        // --- MANEJO DE VISTAS ---
+
+        function mostrarAuthView() {
+            recuperacionView.style.display = 'none';
+            authView.style.display = 'block';
+            subtituloPrincipal.textContent = 'Inicia sesión para gestionar tu talonario.';
+        }
+        
+        function mostrarRecuperacionView() {
+            authView.style.display = 'none';
+            recuperacionView.style.display = 'block';
+            subtituloPrincipal.textContent = 'Restablecimiento de Contraseña';
+            // Copiar el email si ya lo habían escrito en el login
+            recuperacionEmailInput.value = emailInput.value;
+        }
+
+        olvidoContrasenaBtn.onclick = mostrarRecuperacionView;
+        volverLoginBtn.onclick = mostrarAuthView;
+
+        // --- LÓGICA DE AUTENTICACIÓN (LOGIN/REGISTRO) ---
 
         toggleAuthBtn.onclick = () => {
             isLogin = !isLogin;
@@ -324,7 +337,7 @@ p {
                     mostrarNotificacion("¡Registro exitoso! Iniciando sesión...");
                 }
             } catch (error) {
-                // Manejo de errores 
+                // Manejo de errores
                 let msg = 'Error desconocido. Verifica tu conexión.';
                 if (error.code === 'auth/email-already-in-use') {
                     msg = 'El correo ya está en uso. ¡Intenta iniciar sesión!';
@@ -334,25 +347,42 @@ p {
                     msg = 'Contraseña débil (mín. 6 caracteres).';
                 } else if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
                     msg = 'Credenciales incorrectas.';
-                } else if (error.code === 'auth/operation-not-allowed') {
-                    msg = 'La autenticación con Email/Contraseña no está habilitada en Firebase.';
+                } 
+                mostrarNotificacion(`⚠️ Error: ${msg}`);
+            }
+        };
+        
+        // --- LÓGICA DE RECUPERACIÓN DE CONTRASEÑA ---
+
+        recuperacionForm.onsubmit = async (e) => {
+            e.preventDefault();
+            const email = recuperacionEmailInput.value;
+
+            try {
+                await sendPasswordResetEmail(auth, email);
+                mostrarNotificacion(`✅ Enlace enviado a ${email}. Revisa tu bandeja de entrada (y SPAM).`);
+                mostrarAuthView(); // Volver al login
+            } catch (error) {
+                let msg = 'Error al intentar enviar el enlace.';
+                if (error.code === 'auth/invalid-email') {
+                    msg = 'Correo inválido.';
+                } else if (error.code === 'auth/user-not-found') {
+                    msg = 'Usuario no encontrado. Verifica el correo e intenta de nuevo.';
                 }
                 mostrarNotificacion(`⚠️ Error: ${msg}`);
             }
         };
 
-        // Escucha el estado de autenticación de Firebase
+        // --- ESCUCHA DE AUTENTICACIÓN (ANTI-PARPADEO) ---
+
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // *** CAMBIO CLAVE: REDIRECCIÓN AL ARCHIVO PRINCIPAL ***
-                // Si hay usuario, redirigimos inmediatamente (el authView sigue oculto)
+                // Si hay usuario, redirigimos inmediatamente
                 window.location.href = 'talonario.html'; 
             } else {
-                // Si NO hay usuario, mostramos el formulario
-                authView.style.display = 'flex'; 
-                subtituloPrincipal.textContent = 'Inicia sesión para gestionar tu talonario.';
+                // Si NO hay usuario, mostramos la vista principal (Login)
+                mostrarAuthView();
             }
-            // Si no hay usuario, se queda en esta página.
         });
     }
 
