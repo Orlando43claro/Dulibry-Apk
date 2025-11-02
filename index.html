@@ -45,8 +45,6 @@ p {
     margin: 10px 0;
 }
 
-/* ... (Todos los estilos CSS restantes se mantienen igual) ... */
-
 /* --- VISTA DE LOGIN/TALONARIO --- */
 .vista {
     width: 100%;
@@ -105,9 +103,38 @@ p {
 }
 /* --------------------------------- */
 
-/* ... (Incluir el resto de estilos para modales, notificaciones, etc. aunque no se usen aquí, por consistencia) ... */
+/* Estilos para notificaciones */
+.notificacion {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #00ff7f;
+    color: #fff;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 255, 127, 0.7);
+    z-index: 2000;
+    display: none;
+    animation: slideIn 0.5s ease forwards, slideOut 0.5s ease 2.5s forwards;
+}
 
-/* Estilos para el icono (debes incluirlos) */
+.notificacion p {
+    margin: 0;
+    font-size: 1em;
+    font-weight: 600;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideOut {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(100%); opacity: 0; }
+}
+
+/* Estilos para el icono */
 .icono {
     width: 50px;
     height: 50px;
@@ -152,10 +179,43 @@ p {
 }
 
 .check {
-    /* ... (resto del check) ... */
+    width: 6px;
+    height: 6px;
+    background: #00ff7f;
+    border-radius: 50%;
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    box-shadow: 0 0 5px rgba(0, 255, 127, 0.7);
 }
 
-/* ... (Media queries también se mantienen) ... */
+.check::before {
+    content: '';
+    position: absolute;
+    width: 1.25px;
+    height: 2.5px;
+    background: #ffffff;
+    transform: rotate(45deg);
+    top: 1.5px;
+    left: 2.25px;
+}
+
+.check::after {
+    content: '';
+    position: absolute;
+    width: 1.25px;
+    height: 1.25px;
+    background: #ffffff;
+    transform: rotate(-45deg);
+    top: 2.5px;
+    left: 1.75px;
+}
+
+@media (max-width: 600px) {
+    .vista {
+        padding: 20px;
+    }
+}
 
     </style>
     <link rel="icon" id="favicon" type="image/png" href="icono-talonariodigital.png">
@@ -222,9 +282,11 @@ p {
         notificacion.style.boxShadow = mensaje.includes('Error') ? '0 0 15px rgba(255, 71, 87, 0.7)' : '0 0 15px rgba(0, 255, 127, 0.7)';
         
         mensajeNotificacion.textContent = mensaje;
+        // Reiniciar la animación (necesario para que se muestre correctamente)
         notificacion.style.animation = 'none';
         notificacion.offsetHeight; 
         notificacion.style.animation = null; 
+
         notificacion.style.display = 'block';
     }
 
@@ -254,12 +316,14 @@ p {
                 if (isLogin) {
                     await signInWithEmailAndPassword(auth, email, password);
                     mostrarNotificacion("¡Sesión iniciada con éxito!");
+                    // La redirección ocurrirá en onAuthStateChanged
                 } else {
                     await createUserWithEmailAndPassword(auth, email, password);
-                    mostrarNotificacion("¡Registro exitoso!");
+                    mostrarNotificacion("¡Registro exitoso! Iniciando sesión...");
+                    // La redirección ocurrirá en onAuthStateChanged
                 }
             } catch (error) {
-                // Manejo de errores (se mantiene igual)
+                // Manejo de errores 
                 let msg = 'Error desconocido. Verifica tu conexión.';
                 if (error.code === 'auth/email-already-in-use') {
                     msg = 'El correo ya está en uso. ¡Intenta iniciar sesión!';
@@ -279,7 +343,8 @@ p {
         // Escucha el estado de autenticación de Firebase
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // *** CAMBIO CLAVE: REDIRECCIÓN AL ARCHIVO PRINCIPAL ***
+                // *** REDIRECCIÓN CLAVE: Envía al usuario a la página del talonario ***
+                console.log("Usuario autenticado. Redirigiendo a talonario.html");
                 window.location.href = 'talonario.html'; 
             }
             // Si no hay usuario, se queda en esta página.
