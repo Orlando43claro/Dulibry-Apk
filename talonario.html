@@ -802,7 +802,7 @@ td.oculta {
                 <i class="fas fa-user-circle"></i> Perfil
             </button>
             
-            <a href="admin.html" id="abrirChatBtn">
+            <a href="chat.html" id="abrirChatBtn">
                 <i class="fas fa-comments"></i> Chat
                 <span id="chatNotificationBadge">0</span>
             </a>
@@ -926,10 +926,8 @@ td.oculta {
         deleteDoc, 
         writeBatch,
         onSnapshot,
-        // *** IMPORTACIONES AÑADIDAS/CORREGIDAS ***
         query, 
         where 
-        // ***************************************
     } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
     import { 
         getAuth, 
@@ -1001,21 +999,23 @@ td.oculta {
         await batch.commit();
     }
     
-    // 🚀 --- FUNCIÓN CORREGIDA: INICIAR OYENTE DE NOTIFICACIONES DEL CHAT ---
+    // 🚀 --- FUNCIÓN PARA INICIAR OYENTE DE NOTIFICACIONES DEL CHAT ---
     function iniciarOyenteNotificacionesChat() {
         if (!uidUsuarioActual) return;
         
+        // Detener oyente anterior si existe
         if (unsubscribeChatNotifications) {
             unsubscribeChatNotifications();
             unsubscribeChatNotifications = null;
         }
 
         const badge = document.getElementById('chatNotificationBadge');
+        const chatButton = document.getElementById('abrirChatBtn');
         
-        // **NUEVA LÓGICA:** Solo consulta mensajes donde 'leidoAdmin' es falso.
+        // Consulta: mensajes donde 'leidoAdmin' es falso.
         const chatRef = collection(db, "chats"); 
-        // Ojo: Asegúrate que tus documentos de chat tengan el campo 'leidoAdmin: false' al crearse.
-        const q = query(chatRef, where("leidoAdmin", "==", false));
+        // Importante: Asegúrate de que los mensajes de cliente se guarden con leidoAdmin: false
+        const q = query(chatRef, where("leidoAdmin", "==", false)); 
 
         console.log(`Estableciendo oyente de notificaciones de chat para mensajes no leídos.`);
 
@@ -1025,14 +1025,15 @@ td.oculta {
             if (mensajesNoLeidos > 0) { 
                 badge.textContent = mensajesNoLeidos > 99 ? '99+' : mensajesNoLeidos; // Limita a 99+
                 badge.style.display = 'block';
-                document.getElementById('abrirChatBtn').classList.add('notificacion-activa');
+                chatButton.classList.add('notificacion-activa');
             } else {
                 badge.style.display = 'none';
-                document.getElementById('abrirChatBtn').classList.remove('notificacion-activa');
+                chatButton.classList.remove('notificacion-activa');
             }
         }, (error) => {
             console.error("Error al escuchar notificaciones de chat:", error);
             badge.style.display = 'none'; 
+            chatButton.classList.remove('notificacion-activa');
         });
     }
 
@@ -1190,13 +1191,12 @@ td.oculta {
                 // USUARIO AUTENTICADO
                 uidUsuarioActual = user.uid;
                 
-                // MOSTRAR EL TALONARIO (CORRECCIÓN DE VISIBILIDAD)
+                // MOSTRAR EL TALONARIO
                 talonarioView.style.display = 'flex'; 
                 
                 userInfo.style.display = 'flex'; // Usar flex para los botones
                 
                 document.getElementById('emailDisplay').textContent = user.email; 
-                // document.getElementById('emailDisplay').style.display es 'none' por CSS
                 
                 setupPerfilListeners(); 
 
@@ -1207,8 +1207,9 @@ td.oculta {
                     iniciarOyenteTiempoReal(); 
                 }
                 
-                // 2. Iniciar la escucha de Notificaciones del Chat (NUEVO)
-                if (!unsubscribeChatNotifications) {
+                // 2. Iniciar la escucha de Notificaciones del Chat
+                // 🛑 Aseguramos que se inicie solo si no está activo.
+                if (!unsubscribeChatNotifications) { 
                     iniciarOyenteNotificacionesChat();
                 }
                 
@@ -1222,7 +1223,7 @@ td.oculta {
                     unsubscribe();
                     unsubscribe = null;
                 }
-                if (unsubscribeChatNotifications) { // NUEVO: Detener el oyente de chat
+                if (unsubscribeChatNotifications) { 
                     unsubscribeChatNotifications();
                     unsubscribeChatNotifications = null;
                 }
