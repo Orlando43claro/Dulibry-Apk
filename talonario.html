@@ -717,6 +717,10 @@ td.oculta {
                 <button id="filtroApartado" class="filtro">Apartado <span class="notificacion-filtro" id="contadorApartado">0</span></button>
                 <button id="filtroPagado" class="filtro">Pagado <span class="notificacion-filtro" id="contadorPagado">0</span></button>
             </div>
+            
+            <button id="copiarEnlacePublicoBtn" class="filtro" style="background: #2ecc71; margin-left: 15px;">
+                <i class="fas fa-link"></i> Compartir Enlace Público
+            </button>
         </div>
         <div id="talonario" style="margin-top: 20px;">
             </div>
@@ -1012,7 +1016,30 @@ td.oculta {
         });
     }
 
-    // --- (Resto de funciones: setupPerfilListeners, setupAuthListeners, etc. se mantienen igual) ---
+    // --- FUNCIÓN PARA COPIAR EL ENLACE PÚBLICO (NUEVA FUNCIÓN) ---
+    function copiarEnlacePublico() {
+        if (!uidUsuarioActual) {
+            mostrarNotificacion("⚠️ Error: UID de administrador no disponible. Inicia sesión primero.");
+            return;
+        }
+        
+        // Construye el enlace a la nueva página pública, incluyendo la UID del administrador.
+        // Asume que 'publico.html' está en la raíz o en el mismo nivel que 'talonario.html'
+        const urlBase = window.location.origin + '/publico.html'; 
+        
+        const urlPublica = `${urlBase}?uid=${uidUsuarioActual}`;
+        
+        navigator.clipboard.writeText(urlPublica)
+            .then(() => {
+                mostrarNotificacion("✅ Enlace público copiado. ¡A compartir!");
+            })
+            .catch(err => {
+                console.error('Error al copiar el enlace:', err);
+                mostrarNotificacion("⚠️ Error: No se pudo copiar el enlace automáticamente.");
+            });
+    }
+    // -----------------------------------------------------------
+
 
     // --- MANEJO DE AUTENTICACIÓN (GUARDIA DE SEGURIDAD) ---
 
@@ -1085,7 +1112,7 @@ td.oculta {
         });
     }
 
-    // --- (Resto de funciones se mantienen igual) ---
+    // --- (Resto de funciones se mantienen igual, incluyendo handleChangePassword, setupPerfilListeners) ---
 
     async function handleChangePassword(e) {
         e.preventDefault();
@@ -1168,6 +1195,9 @@ td.oculta {
         document.getElementById('filtroApartado').addEventListener('click', () => aplicarFiltro('apartado'));
         document.getElementById('filtroPagado').addEventListener('click', () => aplicarFiltro('pagado'));
         document.getElementById('filtroTodo').addEventListener('click', () => aplicarFiltro('todo'));
+        
+        // 🎯 AÑADIR LISTENER AL NUEVO BOTÓN DE COMPARTIR ENLACE PÚBLICO
+        document.getElementById('copiarEnlacePublicoBtn').addEventListener('click', copiarEnlacePublico);
         
         inicializarModales(); 
         
