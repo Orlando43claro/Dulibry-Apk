@@ -9,7 +9,6 @@
     
     <style>
 /* --- ESTILOS CSS COMPLETOS --- */
-/* ... (Se mantiene igual) ... */
 body {
     font-family: 'Poppins', sans-serif;
     background: linear-gradient(135deg, #e0eafc, #cfdef3);
@@ -53,31 +52,35 @@ p#subtituloPrincipal {
     width: 100%;
     text-align: center;
 }
-#userInfo {
-    margin-top: 0; 
+
+/* --- ESTILOS PARA ICONOS FIJOS (NUEVO) --- */
+.fixed-actions-container {
+    position: fixed;
+    top: 0;
+    right: 0;
+    padding: 10px;
     display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    flex-wrap: wrap;
-    gap: 10px;
+    gap: 8px;
+    z-index: 1000; /* Asegura que esté por encima del resto */
 }
-#emailDisplay {
-    display: none !important; 
-}
-#userInfo button, #abrirChatBtn {
+
+.action-icon {
     border: none;
-    padding: 8px 16px;
-    border-radius: 5px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1.2em;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.2s, transform 0.2s;
-    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
     display: flex;
     align-items: center;
-    gap: 5px;
+    justify-content: center;
     color: white;
-    font-size: 0.9em;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    position: relative; /* Para la insignia de notificación */
 }
+
 #abrirPerfilBtn {
     background: #3498db;
 }
@@ -86,16 +89,18 @@ p#subtituloPrincipal {
 }
 #abrirChatBtn {
     background: #2ecc71;
-    position: relative;
+    text-decoration: none;
 }
-#userInfo button:hover, #abrirChatBtn:hover {
+.action-icon:hover {
     opacity: 0.9;
-    transform: translateY(-1px);
+    transform: scale(1.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
+
 #chatNotificationBadge {
     position: absolute;
-    top: -8px;
-    right: -8px;
+    top: -5px;
+    right: -5px;
     background: #ff4757;
     color: white;
     font-size: 0.75em;
@@ -114,11 +119,15 @@ p#subtituloPrincipal {
     70% { box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); }
     100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
 }
+/* --- FIN ESTILOS PARA ICONOS FIJOS --- */
+
+
 @media (max-width: 650px) {
     header {
         flex-direction: column;
         align-items: center;
         padding-bottom: 10px;
+        margin-top: 50px; /* Espacio para los iconos fijos */
     }
     .logo {
         margin-bottom: 10px;
@@ -126,15 +135,16 @@ p#subtituloPrincipal {
     p#subtituloPrincipal {
         margin-bottom: 10px;
     }
-    #userInfo {
-        width: 100%;
-        justify-content: center;
-        margin-top: 10px;
+    
+    /* Ajuste en móvil para que los iconos no se superpongan */
+    .fixed-actions-container {
+        padding: 5px;
+        gap: 5px;
     }
-    #userInfo button, #abrirChatBtn {
-        flex-grow: 1;
-        text-align: center;
-        justify-content: center;
+    .action-icon {
+        width: 35px;
+        height: 35px;
+        font-size: 1em;
     }
 }
 .controles {
@@ -622,7 +632,7 @@ td.oculta {
     .check::after {
         width: 1mm;
         height: 1mm;
-        top: 2mm;
+        top: 2.5mm;
         left: 1.5mm;
     }
     .controles {
@@ -677,6 +687,22 @@ td.oculta {
     <link rel="icon" id="favicon" type="image/png" href="icono-talonariodigital.png">
 </head>
 <body>
+    
+    <div class="fixed-actions-container" id="fixedActionsContainer" style="display: none;">
+        <button id="abrirPerfilBtn" class="action-icon">
+            <i class="fas fa-user-circle"></i>
+        </button>
+        
+        <a href="admin.html" id="abrirChatBtn" class="action-icon">
+            <i class="fas fa-comments"></i>
+            <span id="chatNotificationBadge">!</span>
+        </a>
+        
+        <button id="logoutBtn" class="action-icon">
+            <i class="fas fa-sign-out-alt"></i>
+        </button>
+    </div>
+
     <header>
         <div class="logo">
             <div class="icono">
@@ -686,23 +712,6 @@ td.oculta {
                 </div>
             </div>
             <h1>TalonarioDigital</h1>
-        </div>
-
-        <div id="userInfo" style="display: none;">
-            <p id="emailDisplay"></p> 
-            
-            <button id="abrirPerfilBtn">
-                <i class="fas fa-user-circle"></i> Perfil
-            </button>
-            
-            <a href="admin.html" id="abrirChatBtn">
-                <i class="fas fa-comments"></i> Chat
-                <span id="chatNotificationBadge">!</span>
-            </a>
-            
-            <button id="logoutBtn">
-                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
-            </button>
         </div>
         
         <p id="subtituloPrincipal">Verificando sesión...</p>
@@ -1012,8 +1021,6 @@ td.oculta {
         });
     }
 
-    // --- (Resto de funciones: setupPerfilListeners, setupAuthListeners, etc. se mantienen igual) ---
-
     // --- MANEJO DE AUTENTICACIÓN (GUARDIA DE SEGURIDAD) ---
 
     function setupAuthListeners() {
@@ -1030,12 +1037,12 @@ td.oculta {
 
         onAuthStateChanged(auth, (user) => {
             const talonarioView = document.getElementById('talonarioView');
-            const userInfo = document.getElementById('userInfo');
+            const fixedActionsContainer = document.getElementById('fixedActionsContainer'); /* <--- Cambio aquí */
             const subtituloPrincipal = document.getElementById('subtituloPrincipal');
             
             // Ocultar el contenido por defecto
             talonarioView.style.display = 'none'; 
-            userInfo.style.display = 'none';
+            fixedActionsContainer.style.display = 'none'; /* <--- Cambio aquí */
             subtituloPrincipal.textContent = 'Verificando sesión...';
 
 
@@ -1043,12 +1050,11 @@ td.oculta {
                 // USUARIO AUTENTICADO
                 uidUsuarioActual = user.uid;
                 
-                // MOSTRAR EL TALONARIO
+                // MOSTRAR EL TALONARIO Y ACCIONES FIJAS
                 talonarioView.style.display = 'flex'; 
+                fixedActionsContainer.style.display = 'flex'; /* <--- Cambio aquí */
                 
-                userInfo.style.display = 'flex'; // Usar flex para los botones
-                
-                document.getElementById('emailDisplay').textContent = user.email; 
+                // document.getElementById('emailDisplay').textContent = user.email;  // Ya no se usa en el header
                 
                 setupPerfilListeners(); 
 
@@ -1084,8 +1090,6 @@ td.oculta {
             }
         });
     }
-
-    // --- (Resto de funciones se mantienen igual) ---
 
     async function handleChangePassword(e) {
         e.preventDefault();
@@ -1137,7 +1141,7 @@ td.oculta {
         const cerrarPerfilModal = document.getElementById('cerrarPerfilModal');
         const cambioContrasenaForm = document.getElementById('cambioContrasenaForm');
         const userEmailDisplayModal = document.getElementById('userEmailDisplayModal');
-        const emailDisplayHeader = document.getElementById('emailDisplay');
+        // const emailDisplayHeader = document.getElementById('emailDisplay'); // Ya no se usa
 
         cambioContrasenaForm.addEventListener('submit', handleChangePassword);
 
