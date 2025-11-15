@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TalonarioDigital (Seguro)</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <title>TalonarioDigital</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
     <style>
@@ -13,34 +13,30 @@ body {
     font-family: 'Poppins', sans-serif;
     background: linear-gradient(135deg, #e0eafc, #cfdef3);
     margin: 0;
-    padding: 0; /* padding: 20px; eliminado para usar margin-top en el contenido */
+    padding: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     min-height: 100vh;
 }
 
-/* --- ESTILOS DE LA BARRA SUPERIOR FIJA (NUEVO) --- */
+/* --- ESTILOS DE LA BARRA SUPERIOR FIJA --- */
 #fixedHeader {
-    /* Fija la cabecera */
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    
-    /* Estilo de la barra */
     background-color: #ffffff;
     padding: 10px 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     z-index: 1000; 
-
-    /* Distribución de elementos */
     display: flex;
-    justify-content: space-between; /* Logo a la izquierda, Iconos a la derecha */
+    justify-content: space-between; 
     align-items: center;
-    flex-wrap: wrap; 
+    flex-wrap: nowrap; /* Fuerza a mantener en una sola línea */
     box-sizing: border-box; 
-    height: 65px; /* Altura fija para el cálculo del margen */
+    height: 65px; 
+    max-width: 100%;
 }
 
 .logo {
@@ -56,17 +52,15 @@ h1 {
     margin: 0;
 }
 
-/* El subtítulo se mueve al contenido principal */
 p#subtituloPrincipal {
     color: #34495e;
     font-size: clamp(0.9em, 3vw, 1em);
     margin: 10px 0;
     width: 100%;
     text-align: center;
-    padding-top: 5px; /* Pequeño ajuste visual */
+    padding-top: 5px; 
 }
 
-/* Contenedor de los Iconos de Acción (Movido dentro del header fijo) */
 #actionIconsContainer {
     display: flex;
     gap: 8px;
@@ -128,44 +122,71 @@ p#subtituloPrincipal {
     70% { box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); }
     100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
 }
-/* --- FIN ESTILOS BARRA FIJA --- */
 
-
-/* --- MARGEN PARA EVITAR QUE EL CONTENIDO SE ESCONDA BAJO EL HEADER FIJO --- */
-#talonarioViewContainer { /* Contenedor general del contenido */
+/* --- MARGEN PARA CONTENIDO BAJO EL HEADER FIJO --- */
+#talonarioViewContainer { 
     width: 100%;
     max-width: 900px;
-    /* Ajusta el margen superior para dejar espacio a la barra fija */
     margin-top: 80px; 
     padding: 0 20px; 
     box-sizing: border-box;
 }
 
-@media (max-width: 650px) {
-    #fixedHeader {
-        height: auto; /* Permite que crezca si el contenido se envuelve */
-        padding: 10px;
-    }
-
-    #talonarioViewContainer {
-         /* Ajuste del margen para móviles si la barra crece */
-        margin-top: 110px; 
-        padding: 0 10px;
-    }
-    
-    .logo h1 {
-        font-size: 1.2em;
-    }
-
-    .action-icon {
-        width: 35px;
-        height: 35px;
-        font-size: 1em;
-    }
+/* --- ESTILOS DE CONFIGURACIÓN DE PRECIO Y RESUMEN FINANCIERO (NUEVO) --- */
+#precioConfig {
+    display: flex; 
+    gap: 20px; 
+    flex-wrap: wrap; 
+    justify-content: center; 
+    margin-bottom: 15px; 
+    padding: 10px; 
+    background: #ffffff; 
+    border-radius: 10px; 
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
+#precioRifa {
+    padding: 6px; 
+    border-radius: 5px; 
+    border: 1px solid #ccc; 
+    width: 100px; 
+    text-align: center;
+}
 
-/* --- ESTILOS DE CONTENIDO PRINCIPAL (Se mantienen iguales) --- */
+#guardarPrecioBtn {
+    padding: 6px 12px; 
+    background: #3498db; 
+    color: white; 
+    border: none; 
+    border-radius: 5px; 
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+#guardarPrecioBtn:hover {
+    background: #2980b9;
+}
+
+#resumenFinanciero {
+    display: flex; 
+    gap: 15px; 
+    align-items: center;
+}
+
+#recaudadoDisplay {
+    font-weight: 700; 
+    color: #27ae60;
+}
+
+#potencialDisplay {
+    font-weight: 500; 
+    color: #f39c12; 
+    border-left: 1px solid #ccc; 
+    padding-left: 15px;
+}
+/* --- FIN ESTILOS RESUMEN FINANCIERO --- */
+
+/* --- ESTILOS DE CONTENIDO PRINCIPAL --- */
 .controles {
     display: flex;
     gap: 15px;
@@ -173,15 +194,6 @@ p#subtituloPrincipal {
     justify-content: center;
     flex-wrap: wrap;
     margin-top: 10px;
-}
-#contadorVendidos {
-    color: #2c3e50;
-    font-size: 1em;
-    font-weight: 600;
-    background: #ffffff;
-    padding: 5px 10px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 .filtros {
     display: flex;
@@ -390,7 +402,7 @@ td.oculta {
     background: rgba(0, 0, 0, 0.5);
     justify-content: center;
     align-items: center;
-    z-index: 2000; /* Z-index alto para modales */
+    z-index: 2000; 
 }
 .modal-content {
     background: #fff;
@@ -516,7 +528,7 @@ td.oculta {
 }
 .notificacion {
     position: fixed;
-    top: 75px; /* Ajuste para que se muestre debajo de la barra fija */
+    top: 75px; 
     right: 20px;
     background: #00ff7f;
     color: #fff;
@@ -673,16 +685,12 @@ td.oculta {
         font-size: 0.5em;
         padding: 1px 4px;
     }
-    #contadorVendidos {
-        font-size: 0.9em;
-        padding: 4px 8px;
-    }
     #limpiarTalonario {
         padding: 8px 16px;
         font-size: 0.9em;
     }
     .notificacion {
-        top: 120px; /* Ajuste para móvil bajo la barra expandida */
+        top: 120px; 
         right: 10px;
         padding: 10px 15px;
         font-size: 0.9em;
@@ -690,6 +698,23 @@ td.oculta {
     
     #lista {
         grid-template-columns: 1fr;
+    }
+    
+    #precioConfig {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    #resumenFinanciero {
+        gap: 10px;
+        justify-content: space-around;
+        padding-top: 5px;
+        border-top: 1px solid #eee;
+    }
+    
+    #potencialDisplay {
+        border-left: none;
+        padding-left: 0;
     }
     
 }
@@ -739,8 +764,24 @@ td.oculta {
         <p id="subtituloPrincipal">Verificando sesión...</p>
         
         <div id="talonarioView" style="display: none; width: 100%; flex-direction: column; align-items: center;">
+            
+            <div id="precioConfig">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <label for="precioRifa" style="font-weight: 600; color: #2c3e50;">
+                        Costo por Boleto ($): 
+                        <span id="precioDisplay" style="color: #2ecc71; font-weight: 700;">$0</span>
+                    </label>
+                    
+                    <input type="number" id="precioRifa" value="" min="0" style="padding: 6px; border-radius: 5px; border: 1px solid #ccc; width: 100px; text-align: center;">
+                    <button id="guardarPrecioBtn">Guardar</button>
+                </div>
+                
+                <div id="resumenFinanciero">
+                    <span id="recaudadoDisplay">Recaudado: $0</span>
+                    <span id="potencialDisplay">Potencial: $0</span>
+                </div>
+            </div>
             <div class="controles">
-                <span id="contadorVendidos">Vendidos: 0/100</span>
                 <div class="filtros">
                     <button id="filtroTodo" class="filtro activo">Todo <span class="notificacion-filtro" id="contadorTodo">100</span></button>
                     <button id="filtroDisponible" class="filtro">Disponible <span class="notificacion-filtro" id="contadorDisponible">100</span></button>
@@ -891,6 +932,10 @@ td.oculta {
     let filtroActivo = 'todo';
     let datosActuales = { seleccionados: [], pagados: [], datosBoletos: {} }; 
     let numeroBoletoActual = null; 
+    
+    // --- NUEVAS VARIABLES DE ESTADO PARA PRECIO GLOBAL ---
+    let precioBoleto = 0; // Valor por defecto inicial 
+    const configuracionRef = (uid) => doc(db, 'users', uid, 'config', 'precios'); 
     // ----------------------------
 
     // --- FUNCIONES CRUD DINÁMICAS (DEPENDEN DE uidUsuarioActual) ---
@@ -930,7 +975,6 @@ td.oculta {
     function iniciarOyenteNotificacionesChat() {
         if (!uidUsuarioActual) return;
         
-        // 1. Detener oyente anterior
         if (unsubscribeChatNotifications) {
             unsubscribeChatNotifications();
             unsubscribeChatNotifications = null;
@@ -944,7 +988,6 @@ td.oculta {
 
         console.log(`Estableciendo oyente de notificaciones de chat para UID: ${uidUsuarioActual}`);
 
-        // 2. Establecer oyente en el documento de metadatos del usuario.
         unsubscribeChatNotifications = onSnapshot(metadataRef, async (metadataDoc) => {
             let lastReadTimestamp = null;
 
@@ -952,7 +995,6 @@ td.oculta {
                 lastReadTimestamp = metadataDoc.data().lastReadTimestamp;
             }
 
-            // 3. Obtener el último mensaje del chat global para comparar.
             const qLastMessage = query(chatRef, orderBy("timestamp", "desc"), limit(1));
             const lastMessageSnapshot = await getDocs(qLastMessage);
             
@@ -972,7 +1014,6 @@ td.oculta {
                     mensajesNoLeidos = 1;
                 }
             }
-
 
             if (mensajesNoLeidos > 0) { 
                 badge.textContent = '!'; 
@@ -1038,6 +1079,88 @@ td.oculta {
             mostrarNotificacion('Error de conexión en tiempo real con Firebase.');
         });
     }
+    
+    // --- NUEVAS FUNCIONES: CONFIGURACIÓN DE PRECIO Y RESUMEN FINANCIERO (MODIFICADAS) ---
+    async function cargarConfiguracionPrecio() {
+        if (!uidUsuarioActual) return;
+
+        try {
+            const docSnap = await getDoc(configuracionRef(uidUsuarioActual));
+            const precioInput = document.getElementById('precioRifa');
+            const precioDisplay = document.getElementById('precioDisplay');
+            
+            // 1. Siempre limpiar el input al cargar
+            precioInput.value = ""; 
+
+            let precioCargado = 0;
+
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                precioCargado = Number(data.costoBoleto) || 0;
+                
+            } else {
+                precioCargado = 0;
+            }
+
+            precioBoleto = precioCargado;
+
+            // 2. Formatear y actualizar el nuevo display con el valor cargado (o $0)
+            const formatter = new Intl.NumberFormat('es-CO', {
+                style: 'currency',
+                currency: 'COP', 
+                minimumFractionDigits: 0
+            });
+            precioDisplay.textContent = formatter.format(precioBoleto);
+
+
+            actualizarResumenFinanciero(datosActuales.pagados.length);
+
+        } catch (error) {
+            console.error("Error al cargar configuración de precio:", error);
+        }
+    }
+
+    async function guardarConfiguracionPrecio() {
+        const input = document.getElementById('precioRifa');
+        const precioDisplay = document.getElementById('precioDisplay');
+        const nuevoPrecio = Number(input.value);
+
+        if (isNaN(nuevoPrecio) || nuevoPrecio <= 0) {
+            mostrarNotificacion("⚠️ Error: El precio debe ser un número positivo (ej: 5000).");
+            return;
+        }
+        
+        const precioFinal = Math.round(nuevoPrecio); 
+
+        try {
+            const precioData = { costoBoleto: precioFinal };
+            
+            await setDoc(configuracionRef(uidUsuarioActual), precioData, { merge: true });
+            
+            precioBoleto = precioFinal;
+            
+            // Formatear para el display
+            const formatter = new Intl.NumberFormat('es-CO', {
+                style: 'currency',
+                currency: 'COP', 
+                minimumFractionDigits: 0
+            });
+
+            // 1. Actualizar el display
+            precioDisplay.textContent = formatter.format(precioFinal);
+            
+            // 2. Limpiar el campo de entrada inmediatamente
+            input.value = ""; 
+            
+            actualizarResumenFinanciero(datosActuales.pagados.length); 
+            mostrarNotificacion(`✅ Precio de boleto actualizado a ${formatter.format(precioFinal)}.`);
+            
+        } catch (error) {
+            console.error("Error al guardar precio:", error);
+            mostrarNotificacion(`Error al guardar el precio: ${error.message}`); 
+        }
+    }
+
 
     // --- MANEJO DE AUTENTICACIÓN (GUARDIA DE SEGURIDAD) ---
 
@@ -1057,7 +1180,6 @@ td.oculta {
             const talonarioView = document.getElementById('talonarioView');
             const subtituloPrincipal = document.getElementById('subtituloPrincipal');
             
-            // Ocultar el contenido por defecto
             talonarioView.style.display = 'none'; 
             subtituloPrincipal.textContent = 'Verificando sesión...';
 
@@ -1066,12 +1188,11 @@ td.oculta {
                 // USUARIO AUTENTICADO
                 uidUsuarioActual = user.uid;
                 
-                // MOSTRAR EL TALONARIO
                 talonarioView.style.display = 'flex'; 
                 
                 setupPerfilListeners(); 
 
-                subtituloPrincipal.textContent = 'Haz Clic en un número para apartalo, editarlo o pagarlo';
+                subtituloPrincipal.textContent = ''; // Campo en blanco como se solicitó
                 
                 // 1. Iniciar la escucha de datos de Rifas
                 if (!unsubscribe) {
@@ -1082,6 +1203,9 @@ td.oculta {
                 if (!unsubscribeChatNotifications) { 
                     iniciarOyenteNotificacionesChat();
                 }
+                
+                // 3. Cargar la configuración de precio al iniciar la sesión 
+                cargarConfiguracionPrecio(); 
                 
             } else {
                 // NINGÚN USUARIO: REDIRECCIÓN INMEDIATA
@@ -1187,6 +1311,9 @@ td.oculta {
         
         inicializarModales(); 
         
+        // Listener para la nueva funcionalidad de precio
+        document.getElementById('guardarPrecioBtn').addEventListener('click', guardarConfiguracionPrecio);
+
         // Configurar los listeners de autenticación al final
         setupAuthListeners();
     });
@@ -1381,8 +1508,8 @@ td.oculta {
         };
     }
 
+    // --- FUNCIÓN MODIFICADA: Actualizar Controles y Resumen Financiero ---
     function actualizarControles(seleccionados, pagados) {
-        const contador = document.getElementById('contadorVendidos');
         const contadorTodo = document.getElementById('contadorTodo');
         const contadorDisponible = document.getElementById('contadorDisponible');
         const contadorApartado = document.getElementById('contadorApartado');
@@ -1392,11 +1519,32 @@ td.oculta {
         const vendidos = seleccionados.length + pagados.length;
         const disponibles = total - vendidos;
 
-        contador.textContent = `Vendidos: ${vendidos}/100`;
         contadorTodo.textContent = total;
         contadorDisponible.textContent = disponibles;
         contadorApartado.textContent = seleccionados.length;
         contadorPagado.textContent = pagados.length;
+        
+        // Llamada a la nueva función
+        actualizarResumenFinanciero(pagados.length); 
+    }
+
+    // --- NUEVA FUNCIÓN: Actualizar los valores de dinero ---
+    function actualizarResumenFinanciero(boletosPagadosCount) {
+        const recaudadoDisplay = document.getElementById('recaudadoDisplay');
+        const potencialDisplay = document.getElementById('potencialDisplay');
+        
+        const recaudado = boletosPagadosCount * precioBoleto;
+        const potencial = 100 * precioBoleto; 
+
+        // Formatear a moneda local (ajusta 'es-CO' si estás en otro país)
+        const formatter = new Intl.NumberFormat('es-CO', {
+            style: 'currency',
+            currency: 'COP', // Cambia a 'USD', 'MXN', 'EUR', etc. si es necesario
+            minimumFractionDigits: 0
+        });
+        
+        recaudadoDisplay.textContent = `Recaudado: ${formatter.format(recaudado)}`;
+        potencialDisplay.textContent = `Potencial: ${formatter.format(potencial)}`;
     }
 
     function generarListaBoletos(seleccionados, pagados, datosBoletos) {
