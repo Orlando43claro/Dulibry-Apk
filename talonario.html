@@ -13,55 +13,64 @@ body {
     font-family: 'Poppins', sans-serif;
     background: linear-gradient(135deg, #e0eafc, #cfdef3);
     margin: 0;
-    padding: 20px;
+    padding: 0; /* padding: 20px; eliminado para usar margin-top en el contenido */
     display: flex;
     flex-direction: column;
     align-items: center;
     min-height: 100vh;
 }
-header {
+
+/* --- ESTILOS DE LA BARRA SUPERIOR FIJA (NUEVO) --- */
+#fixedHeader {
+    /* Fija la cabecera */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    
+    /* Estilo de la barra */
     background-color: #ffffff;
-    color: #2c3e50;
     padding: 10px 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 900px;
-    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000; 
+
+    /* Distribución de elementos */
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between; /* Logo a la izquierda, Iconos a la derecha */
     align-items: center;
     flex-wrap: wrap; 
     box-sizing: border-box; 
-    border-radius: 8px 8px 0 0;
+    height: 65px; /* Altura fija para el cálculo del margen */
 }
+
 .logo {
     display: flex;
     align-items: center;
     gap: 10px;
 }
+
 h1 {
     color: #2c3e50;
     font-size: clamp(1.5em, 5vw, 2em);
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
     margin: 0;
 }
+
+/* El subtítulo se mueve al contenido principal */
 p#subtituloPrincipal {
     color: #34495e;
     font-size: clamp(0.9em, 3vw, 1em);
     margin: 10px 0;
     width: 100%;
     text-align: center;
+    padding-top: 5px; /* Pequeño ajuste visual */
 }
 
-/* --- ESTILOS PARA ICONOS FIJOS (NUEVO) --- */
-.fixed-actions-container {
-    position: fixed;
-    top: 0;
-    right: 0;
-    padding: 10px;
+/* Contenedor de los Iconos de Acción (Movido dentro del header fijo) */
+#actionIconsContainer {
     display: flex;
     gap: 8px;
-    z-index: 1000; /* Asegura que esté por encima del resto */
+    align-items: center;
 }
 
 .action-icon {
@@ -78,7 +87,7 @@ p#subtituloPrincipal {
     justify-content: center;
     color: white;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    position: relative; /* Para la insignia de notificación */
+    position: relative; 
 }
 
 #abrirPerfilBtn {
@@ -119,34 +128,44 @@ p#subtituloPrincipal {
     70% { box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); }
     100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
 }
-/* --- FIN ESTILOS PARA ICONOS FIJOS --- */
+/* --- FIN ESTILOS BARRA FIJA --- */
 
+
+/* --- MARGEN PARA EVITAR QUE EL CONTENIDO SE ESCONDA BAJO EL HEADER FIJO --- */
+#talonarioViewContainer { /* Contenedor general del contenido */
+    width: 100%;
+    max-width: 900px;
+    /* Ajusta el margen superior para dejar espacio a la barra fija */
+    margin-top: 80px; 
+    padding: 0 20px; 
+    box-sizing: border-box;
+}
 
 @media (max-width: 650px) {
-    header {
-        flex-direction: column;
-        align-items: center;
-        padding-bottom: 10px;
-        margin-top: 50px; /* Espacio para los iconos fijos */
+    #fixedHeader {
+        height: auto; /* Permite que crezca si el contenido se envuelve */
+        padding: 10px;
     }
-    .logo {
-        margin-bottom: 10px;
-    }
-    p#subtituloPrincipal {
-        margin-bottom: 10px;
+
+    #talonarioViewContainer {
+         /* Ajuste del margen para móviles si la barra crece */
+        margin-top: 110px; 
+        padding: 0 10px;
     }
     
-    /* Ajuste en móvil para que los iconos no se superpongan */
-    .fixed-actions-container {
-        padding: 5px;
-        gap: 5px;
+    .logo h1 {
+        font-size: 1.2em;
     }
+
     .action-icon {
         width: 35px;
         height: 35px;
         font-size: 1em;
     }
 }
+
+
+/* --- ESTILOS DE CONTENIDO PRINCIPAL (Se mantienen iguales) --- */
 .controles {
     display: flex;
     gap: 15px;
@@ -371,7 +390,7 @@ td.oculta {
     background: rgba(0, 0, 0, 0.5);
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 2000; /* Z-index alto para modales */
 }
 .modal-content {
     background: #fff;
@@ -497,7 +516,7 @@ td.oculta {
 }
 .notificacion {
     position: fixed;
-    top: 20px;
+    top: 75px; /* Ajuste para que se muestre debajo de la barra fija */
     right: 20px;
     background: #00ff7f;
     color: #fff;
@@ -663,7 +682,7 @@ td.oculta {
         font-size: 0.9em;
     }
     .notificacion {
-        top: 10px;
+        top: 120px; /* Ajuste para móvil bajo la barra expandida */
         right: 10px;
         padding: 10px 15px;
         font-size: 0.9em;
@@ -688,22 +707,7 @@ td.oculta {
 </head>
 <body>
     
-    <div class="fixed-actions-container" id="fixedActionsContainer" style="display: none;">
-        <button id="abrirPerfilBtn" class="action-icon">
-            <i class="fas fa-user-circle"></i>
-        </button>
-        
-        <a href="admin.html" id="abrirChatBtn" class="action-icon">
-            <i class="fas fa-comments"></i>
-            <span id="chatNotificationBadge">!</span>
-        </a>
-        
-        <button id="logoutBtn" class="action-icon">
-            <i class="fas fa-sign-out-alt"></i>
-        </button>
-    </div>
-
-    <header>
+    <header id="fixedHeader">
         <div class="logo">
             <div class="icono">
                 <div class="boleto">
@@ -714,26 +718,44 @@ td.oculta {
             <h1>TalonarioDigital</h1>
         </div>
         
-        <p id="subtituloPrincipal">Verificando sesión...</p>
+        <div id="actionIconsContainer">
+            <button id="abrirPerfilBtn" class="action-icon">
+                <i class="fas fa-user-circle"></i>
+            </button>
+            
+            <a href="admin.html" id="abrirChatBtn" class="action-icon">
+                <i class="fas fa-comments"></i>
+                <span id="chatNotificationBadge">!</span>
+            </a>
+            
+            <button id="logoutBtn" class="action-icon">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </div>
     </header>
 
-    <div id="talonarioView" style="display: none; width: 100%; max-width: 900px; flex-direction: column; align-items: center;">
-        <div class="controles">
-            <span id="contadorVendidos">Vendidos: 0/100</span>
-            <div class="filtros">
-                <button id="filtroTodo" class="filtro activo">Todo <span class="notificacion-filtro" id="contadorTodo">100</span></button>
-                <button id="filtroDisponible" class="filtro">Disponible <span class="notificacion-filtro" id="contadorDisponible">100</span></button>
-                <button id="filtroApartado" class="filtro">Apartado <span class="notificacion-filtro" id="contadorApartado">0</span></button>
-                <button id="filtroPagado" class="filtro">Pagado <span class="notificacion-filtro" id="contadorPagado">0</span></button>
+    <div id="talonarioViewContainer">
+        
+        <p id="subtituloPrincipal">Verificando sesión...</p>
+        
+        <div id="talonarioView" style="display: none; width: 100%; flex-direction: column; align-items: center;">
+            <div class="controles">
+                <span id="contadorVendidos">Vendidos: 0/100</span>
+                <div class="filtros">
+                    <button id="filtroTodo" class="filtro activo">Todo <span class="notificacion-filtro" id="contadorTodo">100</span></button>
+                    <button id="filtroDisponible" class="filtro">Disponible <span class="notificacion-filtro" id="contadorDisponible">100</span></button>
+                    <button id="filtroApartado" class="filtro">Apartado <span class="notificacion-filtro" id="contadorApartado">0</span></button>
+                    <button id="filtroPagado" class="filtro">Pagado <span class="notificacion-filtro" id="contadorPagado">0</span></button>
+                </div>
             </div>
-        </div>
-        <div id="talonario" style="margin-top: 20px;">
-            </div>
-        <button id="limpiarTalonario" style="display: none;">Clic Para Nueva Rifa</button>
+            <div id="talonario" style="margin-top: 20px;">
+                </div>
+            <button id="limpiarTalonario" style="display: none;">Clic Para Nueva Rifa</button>
 
-        <div id="listaBoletos">
-            <h2>Lista de Boletos</h2>
-            <div id="lista"></div> 
+            <div id="listaBoletos">
+                <h2>Lista de Boletos</h2>
+                <div id="lista"></div> 
+            </div>
         </div>
     </div>
 
@@ -786,7 +808,7 @@ td.oculta {
         </div>
     </div>
 
-    <div id="perfilModal" class="modal" style="z-index: 1050;">
+    <div id="perfilModal" class="modal" style="z-index: 2050;">
         <div class="modal-content">
             <span id="cerrarPerfilModal" class="cerrar">×</span>
             <h2>Gestión de Cuenta</h2>
@@ -823,7 +845,7 @@ td.oculta {
         collection, 
         doc, 
         getDocs, 
-        getDoc, // <- Importación necesaria para leer el timestamp
+        getDoc, 
         setDoc, 
         updateDoc, 
         deleteDoc, 
@@ -831,7 +853,7 @@ td.oculta {
         onSnapshot,
         query, 
         where,
-        orderBy, // <- Importación necesaria para ordenar
+        orderBy, 
         limit 
     } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
     import { 
@@ -923,7 +945,6 @@ td.oculta {
         console.log(`Estableciendo oyente de notificaciones de chat para UID: ${uidUsuarioActual}`);
 
         // 2. Establecer oyente en el documento de metadatos del usuario.
-        // Esto se dispara cada vez que el usuario lee el chat y actualiza su timestamp.
         unsubscribeChatNotifications = onSnapshot(metadataRef, async (metadataDoc) => {
             let lastReadTimestamp = null;
 
@@ -940,16 +961,13 @@ td.oculta {
             if (!lastMessageSnapshot.empty) {
                 const lastMessage = lastMessageSnapshot.docs[0].data();
                 const lastMessageTimestamp = lastMessage.timestamp;
-                const isMyOwnMessage = lastMessage.uid === uidUsuarioActual; // No te avises a ti mismo
+                const isMyOwnMessage = lastMessage.uid === uidUsuarioActual; 
 
-                // Verificar si el último mensaje es posterior a la última lectura.
                 if (lastMessageTimestamp && lastReadTimestamp) {
-                    // Si el timestamp del mensaje es mayor al timestamp de mi última lectura
                     if (lastMessageTimestamp.toMillis() > lastReadTimestamp.toMillis() && !isMyOwnMessage) {
-                        mensajesNoLeidos = 1; // Basta con saber que hay uno nuevo.
+                        mensajesNoLeidos = 1; 
                     }
                 } 
-                // Si nunca he leído (lastReadTimestamp es null) y no es mi mensaje, hay 1 nuevo.
                 else if (!lastReadTimestamp && !isMyOwnMessage) {
                     mensajesNoLeidos = 1;
                 }
@@ -957,7 +975,7 @@ td.oculta {
 
 
             if (mensajesNoLeidos > 0) { 
-                badge.textContent = '!'; // O usar la cantidad si decides hacer un query más amplio
+                badge.textContent = '!'; 
                 badge.style.display = 'block';
                 chatButton.classList.add('notificacion-activa');
             } else {
@@ -1037,12 +1055,10 @@ td.oculta {
 
         onAuthStateChanged(auth, (user) => {
             const talonarioView = document.getElementById('talonarioView');
-            const fixedActionsContainer = document.getElementById('fixedActionsContainer'); /* <--- Cambio aquí */
             const subtituloPrincipal = document.getElementById('subtituloPrincipal');
             
             // Ocultar el contenido por defecto
             talonarioView.style.display = 'none'; 
-            fixedActionsContainer.style.display = 'none'; /* <--- Cambio aquí */
             subtituloPrincipal.textContent = 'Verificando sesión...';
 
 
@@ -1050,11 +1066,8 @@ td.oculta {
                 // USUARIO AUTENTICADO
                 uidUsuarioActual = user.uid;
                 
-                // MOSTRAR EL TALONARIO Y ACCIONES FIJAS
+                // MOSTRAR EL TALONARIO
                 talonarioView.style.display = 'flex'; 
-                fixedActionsContainer.style.display = 'flex'; /* <--- Cambio aquí */
-                
-                // document.getElementById('emailDisplay').textContent = user.email;  // Ya no se usa en el header
                 
                 setupPerfilListeners(); 
 
@@ -1141,7 +1154,6 @@ td.oculta {
         const cerrarPerfilModal = document.getElementById('cerrarPerfilModal');
         const cambioContrasenaForm = document.getElementById('cambioContrasenaForm');
         const userEmailDisplayModal = document.getElementById('userEmailDisplayModal');
-        // const emailDisplayHeader = document.getElementById('emailDisplay'); // Ya no se usa
 
         cambioContrasenaForm.addEventListener('submit', handleChangePassword);
 
